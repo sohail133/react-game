@@ -1,7 +1,7 @@
 {
-  "name": "test",
+  "name": "who_want_to_be_a_doctor",
   "version": "1.0.0",
-  "description": "## Who wants to be a millionaire",
+  "description": "Who wants to be a doctor",
   "main": "webpack.config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -7,6 +7,8 @@ import Lifelines from './Lifelines.jsx'
 import Voting from './Voting.jsx'
 import Winnings from './Winnings.jsx'
 import data from './data.js'
+const baseUrl = process.env.BASE_URL
+const atob = require('atob')
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -18,12 +20,12 @@ export default class Game extends React.Component {
       correctAnswer: '',
       allAnswers: [],
       loading: true,
-      name: '',
-      gameScore: {name: '', score: 0},
+      name: document.getElementById('app').getAttribute('data-user'),
+      gameScore: {name: this.state.name, score: 0},
       canAnswer: [false, false, false, false],
       canType: true,
       dChanceActiv: false,
-      text: 'Who wants to be a millionaire?',
+      text: 'Who wants to be a doctor?',
       scores: 0,
       secsLeft: 30,
       maxSecRound: 30,
@@ -32,6 +34,7 @@ export default class Game extends React.Component {
       canClickControl: [true, false, false],
       currentWinnings: 0,
       guaranteedWinnings: 0,
+      questionNumber: 0,
       isPause: false,
     }
   }
@@ -56,12 +59,16 @@ export default class Game extends React.Component {
   }
 
   insertQuestion = data => {
-    const incorrectAnswer = data.results[0].incorrect_answers;
-    const correctAnswer = this.htmlDecode(data.results[0].correct_answer);
+    const incorrect_answers = []
+    incorrect_answers.push(data.incorrect_answer1)
+    incorrect_answers.push(data.incorrect_answer2)
+    incorrect_answers.push(data.incorrect_answer3)
+    const incorrectAnswer = incorrect_answers;
+    const correctAnswer = this.htmlDecode(data.correct_answer);
     const allAnswers = this.shuffle(incorrectAnswer.concat(correctAnswer));
     const idxCorrAns = allAnswers.indexOf(correctAnswer);
     this.setState({
-      question: data.results[0].question,
+      question: data.question,
       correctAnswer: correctAnswer,
       idxCorrAns: idxCorrAns,
       canAnswer: [true, true, true, true],
@@ -70,18 +77,19 @@ export default class Game extends React.Component {
     });
   }
 
-  getQuestion = () => {
-
-    const baseUrl = `https://opentdb.com/api.php?amount=1&difficulty=${data.difficulty[this.state.scores]}&type=multiple`;
-    fetch(baseUrl)
-      .then( data => {
+  getQuestion = async () => {
+    const competitionNumber = parseInt(window.location.pathname.substring(url.lastIndexOf('/') + 1))
+    const url = `${baseUrl}/competitions/${competitionNumber}/competition_questions/${this.state.questionNumber}`;
+    await fetch(url,{
+      method:'GET'
+    }).then( data => {
         if(data.ok){
             return data.json();
         }else{
             throw new Error('Error getting data');
         }
     }).then(data => {
-        this.insertQuestion(data)
+        this.insertQuestion(JSON.parse(atob(data.question)))
     })
     .catch(error => {
       console.log(error);
@@ -97,14 +105,15 @@ export default class Game extends React.Component {
 
 
   prepareQuestion = status => {
-    this.getQuestion();
     this.setState({
+      questionNumber: this.state.questionNumber + 1,
       canUseLifelines: status,
       lifelinesStatus: status,
       canAnswer: [true, true, true, true],
       canClickControl: [true, false, false],
       secsLeft: 30 + this.state.secsLeft,
     });
+    this.getQuestion();
   }
 
   finishGame = text => {
@@ -273,17 +282,22 @@ export default class Game extends React.Component {
 
   }
 
-  updateRanking = (resigned, timeOver = false) => {
+  updateRanking = async  (resigned, timeOver = false) => {
     if(resigned && this.state.currentWinnings > 0 || !resigned && this.state.guaranteedWinnings > 0 && !timeOver) {
-      const rankRef = firebase.database().ref('rank');
-      const newRankRef = rankRef.push();
-      const time = (this.state.scores + 1) *30 - this.state.secsLeft
-      newRankRef.set({
-        name: this.state.name,
-        score: (!resigned)? this.state.guaranteedWinnings : this.state.currentWinnings,
-        totalTime: (this.state.lifelinesStatus[0] === true) ? time : (time+30),
-        lifelinesUsed: this.state.lifelinesStatus.filter( el => el === false).length,
-      });
+      // const rankRef = firebase.database().ref('rank');
+      // const newRankRef = rankRef.push();
+    const competitionNumber = parseInt(window.location.pathname.substring(url.lastIndexOf('/') + 1))
+      const url = `${baseUrl}/competitions/${competitionNumber}/leaderboard`
+      const formData = new FormData();
+      formData.append('competition_result[total_time]',(this.state.scores + 1) *30 - this.state.secsLeft)
+      formData.append('competition_result[name]',this.state.name)
+      formData.append('competition_result[score]',(!resigned)? this.state.guaranteedWinnings : this.state.currentWinnings)
+      formData.append('competition_result[custom_fields]',{chapter: 'San 787878'})
+      formData.append('lifelines_used',this.state.lifelinesStatus.filter( el => el === false).length)
+      await fetch(url,{
+        method:'POST',
+        body:formData
+      })
     }
   }
 
@@ -327,6 +341,7 @@ export default class Game extends React.Component {
     lifelinesStatus[2] = false;
     this.state.canUseLifelines =[false, false, false, false, false];
     this.changeAudio('gameSounds', 'lifelines');
+    this.setState({ questionNumber: this.state.questionNumber + 1})
     this.getQuestion();
   }
 

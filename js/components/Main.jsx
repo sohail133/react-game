@@ -6,11 +6,6 @@ export default class Main extends React.Component {
 
 
   componentDidMount(){
-    const config = {
-      apiKey: "AIzaSyDDwby-Yr6BFMhaIV7RooPj2I7PV0YxTQs",
-      databaseURL: "https://who-wants-to-be-a-millionaire1.firebaseio.com",
-    };
-    firebase.initializeApp(config);
     document.querySelector('#mainTheme').volume = 0.05;
     document.querySelector('#gameSounds').volume = 0.05;
   }
