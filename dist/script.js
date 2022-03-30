@@ -27778,7 +27778,7 @@ var replaceLocation = exports.replaceLocation = function replaceLocation(locatio
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
+
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -27826,23 +27826,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var baseUrl = process.env.BASE_URL;
+var url = 'http://localhost:3000';
 var atob = __webpack_require__(257);
 
 var Game = function (_React$Component) {
   _inherits(Game, _React$Component);
 
   function Game(props) {
-    var _this2 = this;
-
     _classCallCheck(this, Game);
 
     var _this = _possibleConstructorReturn(this, (Game.__proto__ || Object.getPrototypeOf(Game)).call(this, props));
@@ -27869,16 +27865,17 @@ var Game = function (_React$Component) {
     };
 
     _this.insertQuestion = function (data) {
+      console.log('data', data);
       var incorrect_answers = [];
       incorrect_answers.push(data.incorrect_answer1);
       incorrect_answers.push(data.incorrect_answer2);
       incorrect_answers.push(data.incorrect_answer3);
-      var incorrectAnswer = incorrect_answers;
-      var correctAnswer = _this.htmlDecode(data.correct_answer);
+      console.log('incorrect', incorrect_answers);
+      var correctAnswer = _this.htmlDecode(data.results[0].correct_answer);
       var allAnswers = _this.shuffle(incorrectAnswer.concat(correctAnswer));
       var idxCorrAns = allAnswers.indexOf(correctAnswer);
       _this.setState({
-        question: data.question,
+        question: data.results[0].question,
         correctAnswer: correctAnswer,
         idxCorrAns: idxCorrAns,
         canAnswer: [true, true, true, true],
@@ -27887,36 +27884,19 @@ var Game = function (_React$Component) {
       });
     };
 
-    _this.getQuestion = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-      var competitionNumber, url;
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              competitionNumber = parseInt(window.location.pathname.substring(url.lastIndexOf('/') + 1));
-              url = baseUrl + '/competitions/' + competitionNumber + '/competition_questions/' + _this.state.questionNumber;
-              _context.next = 4;
-              return fetch(url, {
-                method: 'GET'
-              }).then(function (data) {
-                if (data.ok) {
-                  return data.json();
-                } else {
-                  throw new Error('Error getting data');
-                }
-              }).then(function (data) {
-                _this.insertQuestion(JSON.parse(atob(data.question)));
-              }).catch(function (error) {
-                console.log(error);
-              });
-
-            case 4:
-            case 'end':
-              return _context.stop();
-          }
-        }
-      }, _callee, _this2);
-    }));
+    _this.getQuestion = function () {
+      var competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1));
+      var baseUrl = url + '/competitions/' + competitionNumber + '/competition_questions/0';
+      fetch(baseUrl, {
+        mode: 'no-cors'
+      }).then(function (data) {
+        return data.json();
+      }).then(function (data) {
+        _this.insertQuestion(JSON.parse(atob(data)));
+      }).catch(function (error) {
+        console.log(error);
+      });
+    };
 
     _this.handleNameChange = function (event) {
       _this.setState({
@@ -27925,15 +27905,14 @@ var Game = function (_React$Component) {
     };
 
     _this.prepareQuestion = function (status) {
+      _this.getQuestion();
       _this.setState({
-        questionNumber: _this.state.questionNumber + 1,
         canUseLifelines: status,
         lifelinesStatus: status,
         canAnswer: [true, true, true, true],
         canClickControl: [true, false, false],
         secsLeft: 30 + _this.state.secsLeft
       });
-      _this.getQuestion();
     };
 
     _this.finishGame = function (text) {
@@ -28102,50 +28081,23 @@ var Game = function (_React$Component) {
       _this.updateRanking(true);
     };
 
-    _this.updateRanking = function () {
-      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(resigned) {
-        var timeOver = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-        var competitionNumber, url, formData;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                if (!(resigned && _this.state.currentWinnings > 0 || !resigned && _this.state.guaranteedWinnings > 0 && !timeOver)) {
-                  _context2.next = 11;
-                  break;
-                }
+    _this.updateRanking = function (resigned) {
+      var timeOver = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
-                // const rankRef = firebase.database().ref('rank');
-                // const newRankRef = rankRef.push();
-                competitionNumber = parseInt(window.location.pathname.substring(url.lastIndexOf('/') + 1));
-                url = baseUrl + '/competitions/' + competitionNumber + '/leaderboard';
-                formData = new FormData();
-
-                formData.append('competition_result[total_time]', (_this.state.scores + 1) * 30 - _this.state.secsLeft);
-                formData.append('competition_result[name]', _this.state.name);
-                formData.append('competition_result[score]', !resigned ? _this.state.guaranteedWinnings : _this.state.currentWinnings);
-                formData.append('competition_result[custom_fields]', { chapter: 'San 787878' });
-                formData.append('lifelines_used', _this.state.lifelinesStatus.filter(function (el) {
-                  return el === false;
-                }).length);
-                _context2.next = 11;
-                return fetch(url, {
-                  method: 'POST',
-                  body: formData
-                });
-
-              case 11:
-              case 'end':
-                return _context2.stop();
-            }
-          }
-        }, _callee2, _this2);
-      }));
-
-      return function (_x) {
-        return _ref3.apply(this, arguments);
-      };
-    }();
+      if (resigned && _this.state.currentWinnings > 0 || !resigned && _this.state.guaranteedWinnings > 0 && !timeOver) {
+        var rankRef = firebase.database().ref('rank');
+        var newRankRef = rankRef.push();
+        var time = (_this.state.scores + 1) * 30 - _this.state.secsLeft;
+        newRankRef.set({
+          name: _this.state.name,
+          score: !resigned ? _this.state.guaranteedWinnings : _this.state.currentWinnings,
+          totalTime: _this.state.lifelinesStatus[0] === true ? time : time + 30,
+          lifelinesUsed: _this.state.lifelinesStatus.filter(function (el) {
+            return el === false;
+          }).length
+        });
+      }
+    };
 
     _this.handleAddExtraTime = function () {
       _this.setText("You've got extra 30 second!");
@@ -28179,7 +28131,6 @@ var Game = function (_React$Component) {
       lifelinesStatus[2] = false;
       _this.state.canUseLifelines = [false, false, false, false, false];
       _this.changeAudio('gameSounds', 'lifelines');
-      _this.setState({ questionNumber: _this.state.questionNumber + 1 });
       _this.getQuestion();
     };
 
@@ -28301,7 +28252,7 @@ var Game = function (_React$Component) {
       allAnswers: [],
       loading: true,
       name: document.getElementById('app').getAttribute('data-user'),
-      gameScore: { name: _this.state.name, score: 0 },
+      gameScore: { name: '', score: 0 },
       canAnswer: [false, false, false, false],
       canType: true,
       dChanceActiv: false,
@@ -28314,7 +28265,6 @@ var Game = function (_React$Component) {
       canClickControl: [true, false, false],
       currentWinnings: 0,
       guaranteedWinnings: 0,
-      questionNumber: 0,
       isPause: false
     };
     return _this;
@@ -28343,7 +28293,7 @@ var Game = function (_React$Component) {
             _react2.default.createElement(
               'label',
               null,
-              _react2.default.createElement('input', { type: 'text', placeholder: 'Enter your name...', onChange: this.handleNameChange, disabled: !this.state.canType, required: true })
+              _react2.default.createElement('input', { type: 'text', value: this.state.name, placeholder: 'Enter your name...', onChange: this.handleNameChange, disabled: !this.state.canType, required: true })
             ),
             _react2.default.createElement('input', { className: 'panelButton', onClick: this.startGame, disabled: !this.state.canClickControl[0], type: 'submit', value: 'START NEW GAME' })
           ),
@@ -28401,7 +28351,6 @@ var Game = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Game;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 250 */

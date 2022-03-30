@@ -7,7 +7,7 @@ import Lifelines from './Lifelines.jsx'
 import Voting from './Voting.jsx'
 import Winnings from './Winnings.jsx'
 import data from './data.js'
-const baseUrl = process.env.BASE_URL
+const url = 'http://localhost:3000'
 const atob = require('atob')
 
 export default class Game extends React.Component {
@@ -21,7 +21,7 @@ export default class Game extends React.Component {
       allAnswers: [],
       loading: true,
       name: document.getElementById('app').getAttribute('data-user'),
-      gameScore: {name: this.state.name, score: 0},
+      gameScore: {name: '', score: 0},
       canAnswer: [false, false, false, false],
       canType: true,
       dChanceActiv: false,
@@ -34,7 +34,6 @@ export default class Game extends React.Component {
       canClickControl: [true, false, false],
       currentWinnings: 0,
       guaranteedWinnings: 0,
-      questionNumber: 0,
       isPause: false,
     }
   }
@@ -59,16 +58,17 @@ export default class Game extends React.Component {
   }
 
   insertQuestion = data => {
+    console.log('data',data)
     const incorrect_answers = []
     incorrect_answers.push(data.incorrect_answer1)
     incorrect_answers.push(data.incorrect_answer2)
     incorrect_answers.push(data.incorrect_answer3)
-    const incorrectAnswer = incorrect_answers;
-    const correctAnswer = this.htmlDecode(data.correct_answer);
+    console.log('incorrect',incorrect_answers)
+    const correctAnswer = this.htmlDecode(data.results[0].correct_answer);
     const allAnswers = this.shuffle(incorrectAnswer.concat(correctAnswer));
     const idxCorrAns = allAnswers.indexOf(correctAnswer);
     this.setState({
-      question: data.question,
+      question: data.results[0].question,
       correctAnswer: correctAnswer,
       idxCorrAns: idxCorrAns,
       canAnswer: [true, true, true, true],
@@ -77,19 +77,14 @@ export default class Game extends React.Component {
     });
   }
 
-  getQuestion = async () => {
-    const competitionNumber = parseInt(window.location.pathname.substring(url.lastIndexOf('/') + 1))
-    const url = `${baseUrl}/competitions/${competitionNumber}/competition_questions/${this.state.questionNumber}`;
-    await fetch(url,{
-      method:'GET'
-    }).then( data => {
-        if(data.ok){
-            return data.json();
-        }else{
-            throw new Error('Error getting data');
-        }
-    }).then(data => {
-        this.insertQuestion(JSON.parse(atob(data.question)))
+  getQuestion = () => {
+    const competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1))
+    const baseUrl = `${url}/competitions/${competitionNumber}/competition_questions/0`;
+    fetch(baseUrl,{
+      mode: 'no-cors',
+    })
+    .then( data => data.json()).then(data => {
+      this.insertQuestion(JSON.parse(atob(data)))
     })
     .catch(error => {
       console.log(error);
@@ -105,15 +100,14 @@ export default class Game extends React.Component {
 
 
   prepareQuestion = status => {
+    this.getQuestion();
     this.setState({
-      questionNumber: this.state.questionNumber + 1,
       canUseLifelines: status,
       lifelinesStatus: status,
       canAnswer: [true, true, true, true],
       canClickControl: [true, false, false],
       secsLeft: 30 + this.state.secsLeft,
     });
-    this.getQuestion();
   }
 
   finishGame = text => {
@@ -282,22 +276,17 @@ export default class Game extends React.Component {
 
   }
 
-  updateRanking = async  (resigned, timeOver = false) => {
+  updateRanking = (resigned, timeOver = false) => {
     if(resigned && this.state.currentWinnings > 0 || !resigned && this.state.guaranteedWinnings > 0 && !timeOver) {
-      // const rankRef = firebase.database().ref('rank');
-      // const newRankRef = rankRef.push();
-    const competitionNumber = parseInt(window.location.pathname.substring(url.lastIndexOf('/') + 1))
-      const url = `${baseUrl}/competitions/${competitionNumber}/leaderboard`
-      const formData = new FormData();
-      formData.append('competition_result[total_time]',(this.state.scores + 1) *30 - this.state.secsLeft)
-      formData.append('competition_result[name]',this.state.name)
-      formData.append('competition_result[score]',(!resigned)? this.state.guaranteedWinnings : this.state.currentWinnings)
-      formData.append('competition_result[custom_fields]',{chapter: 'San 787878'})
-      formData.append('lifelines_used',this.state.lifelinesStatus.filter( el => el === false).length)
-      await fetch(url,{
-        method:'POST',
-        body:formData
-      })
+      const rankRef = firebase.database().ref('rank');
+      const newRankRef = rankRef.push();
+      const time = (this.state.scores + 1) *30 - this.state.secsLeft
+      newRankRef.set({
+        name: this.state.name,
+        score: (!resigned)? this.state.guaranteedWinnings : this.state.currentWinnings,
+        totalTime: (this.state.lifelinesStatus[0] === true) ? time : (time+30),
+        lifelinesUsed: this.state.lifelinesStatus.filter( el => el === false).length,
+      });
     }
   }
 
@@ -341,7 +330,6 @@ export default class Game extends React.Component {
     lifelinesStatus[2] = false;
     this.state.canUseLifelines =[false, false, false, false, false];
     this.changeAudio('gameSounds', 'lifelines');
-    this.setState({ questionNumber: this.state.questionNumber + 1})
     this.getQuestion();
   }
 
@@ -464,7 +452,7 @@ export default class Game extends React.Component {
       <div className='panel'>
         <form className='form'>
           <label>
-            <input type='text' placeholder='Enter your name...' onChange = {this.handleNameChange} disabled = {!this.state.canType} required></input>
+            <input type='text' value={this.state.name} placeholder='Enter your name...' onChange = {this.handleNameChange} disabled = {!this.state.canType} required></input>
           </label>
           <input className='panelButton' onClick = {this.startGame} disabled = {!this.state.canClickControl[0]} type='submit' value='START NEW GAME'/>
         </form>
