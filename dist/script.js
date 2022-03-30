@@ -27870,12 +27870,12 @@ var Game = function (_React$Component) {
       incorrect_answers.push(data.incorrect_answer1);
       incorrect_answers.push(data.incorrect_answer2);
       incorrect_answers.push(data.incorrect_answer3);
-      console.log('incorrect', incorrect_answers);
-      var correctAnswer = _this.htmlDecode(data.results[0].correct_answer);
-      var allAnswers = _this.shuffle(incorrectAnswer.concat(correctAnswer));
+      console.log('question', data.question);
+      var correctAnswer = _this.htmlDecode(data.correct_answer);
+      var allAnswers = _this.shuffle(incorrect_answers.concat(correctAnswer));
       var idxCorrAns = allAnswers.indexOf(correctAnswer);
       _this.setState({
-        question: data.results[0].question,
+        question: data.question,
         correctAnswer: correctAnswer,
         idxCorrAns: idxCorrAns,
         canAnswer: [true, true, true, true],
@@ -27886,7 +27886,7 @@ var Game = function (_React$Component) {
 
     _this.getQuestion = function () {
       var competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1));
-      var baseUrl = url + '/competitions/' + competitionNumber + '/competition_questions/0';
+      var baseUrl = url + '/competitions/' + competitionNumber + '/competition_questions/' + _this.state.questionNumber;
       fetch(baseUrl, {
         mode: 'no-cors'
       }).then(function (data) {
@@ -27908,6 +27908,7 @@ var Game = function (_React$Component) {
       _this.getQuestion();
       _this.setState({
         canUseLifelines: status,
+        questionNumber: _this.state.questionNumber + 1,
         lifelinesStatus: status,
         canAnswer: [true, true, true, true],
         canClickControl: [true, false, false],
@@ -28246,6 +28247,7 @@ var Game = function (_React$Component) {
 
     _this.state = {
       question: '',
+      questionNumber: 0,
       allAnsBtns: [],
       idxCorrAns: null,
       correctAnswer: '',
@@ -28281,6 +28283,7 @@ var Game = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      console.log('question', this.state.question);
       return _react2.default.createElement(
         'div',
         { className: 'container gameContainer' },

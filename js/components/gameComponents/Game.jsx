@@ -15,6 +15,7 @@ export default class Game extends React.Component {
     super(props);
     this.state = {
       question: '',
+      questionNumber: 0,
       allAnsBtns: [],
       idxCorrAns: null,
       correctAnswer: '',
@@ -63,12 +64,12 @@ export default class Game extends React.Component {
     incorrect_answers.push(data.incorrect_answer1)
     incorrect_answers.push(data.incorrect_answer2)
     incorrect_answers.push(data.incorrect_answer3)
-    console.log('incorrect',incorrect_answers)
-    const correctAnswer = this.htmlDecode(data.results[0].correct_answer);
-    const allAnswers = this.shuffle(incorrectAnswer.concat(correctAnswer));
+    console.log('question',data.question)
+    const correctAnswer = this.htmlDecode(data.correct_answer);
+    const allAnswers = this.shuffle(incorrect_answers.concat(correctAnswer));
     const idxCorrAns = allAnswers.indexOf(correctAnswer);
     this.setState({
-      question: data.results[0].question,
+      question: data.question,
       correctAnswer: correctAnswer,
       idxCorrAns: idxCorrAns,
       canAnswer: [true, true, true, true],
@@ -79,7 +80,7 @@ export default class Game extends React.Component {
 
   getQuestion = () => {
     const competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1))
-    const baseUrl = `${url}/competitions/${competitionNumber}/competition_questions/0`;
+    const baseUrl = `${url}/competitions/${competitionNumber}/competition_questions/${this.state.questionNumber}`;
     fetch(baseUrl,{
       mode: 'no-cors',
     })
@@ -103,6 +104,7 @@ export default class Game extends React.Component {
     this.getQuestion();
     this.setState({
       canUseLifelines: status,
+      questionNumber: this.state.questionNumber + 1,
       lifelinesStatus: status,
       canAnswer: [true, true, true, true],
       canClickControl: [true, false, false],
@@ -447,6 +449,7 @@ export default class Game extends React.Component {
 
 
   render() {
+    console.log('question',this.state.question)
     return (
     <div className='container gameContainer'>
       <div className='panel'>
