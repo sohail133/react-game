@@ -59,12 +59,10 @@ export default class Game extends React.Component {
   }
 
   insertQuestion = data => {
-    console.log('data',data)
     const incorrect_answers = []
     incorrect_answers.push(data.incorrect_answer1)
     incorrect_answers.push(data.incorrect_answer2)
     incorrect_answers.push(data.incorrect_answer3)
-    console.log('question',data.question)
     const correctAnswer = this.htmlDecode(data.correct_answer);
     const allAnswers = this.shuffle(incorrect_answers.concat(correctAnswer));
     const idxCorrAns = allAnswers.indexOf(correctAnswer);
@@ -85,7 +83,8 @@ export default class Game extends React.Component {
       mode: 'no-cors',
     })
     .then( data => data.json()).then(data => {
-      this.insertQuestion(JSON.parse(atob(data)))
+      console.log('data',data)
+      this.insertQuestion(JSON.parse(atob(data.question)))
     })
     .catch(error => {
       console.log(error);
@@ -279,16 +278,21 @@ export default class Game extends React.Component {
   }
 
   updateRanking = (resigned, timeOver = false) => {
+    const competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1))
     if(resigned && this.state.currentWinnings > 0 || !resigned && this.state.guaranteedWinnings > 0 && !timeOver) {
-      const rankRef = firebase.database().ref('rank');
-      const newRankRef = rankRef.push();
+      const formData = new FormData();
       const time = (this.state.scores + 1) *30 - this.state.secsLeft
-      newRankRef.set({
-        name: this.state.name,
-        score: (!resigned)? this.state.guaranteedWinnings : this.state.currentWinnings,
-        totalTime: (this.state.lifelinesStatus[0] === true) ? time : (time+30),
-        lifelinesUsed: this.state.lifelinesStatus.filter( el => el === false).length,
-      });
+      formData.append('competition_result[name]',this.state.name)
+      formData.append('competition_result[score]',(!resigned)? this.state.guaranteedWinnings : this.state.currentWinnings)
+      formData.append('competition_result[custom_fields]',"{chapter: 'San 787878'}")
+      formData.append('competition_result[total_time]',(this.state.lifelinesStatus[0] === true) ? time : (time+30))
+      formData.append('lifelines_used',this.state.lifelinesStatus.filter( el => el === false).length)
+      const baseUrl = `${url}/competitions/${competitionNumber}/leaderboard`;
+      fetch(baseUrl,{
+        mode: 'no-cors',
+        method:'Post',
+        body:formData
+      })
     }
   }
 
