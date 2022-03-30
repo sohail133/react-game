@@ -7,6 +7,8 @@ import Lifelines from './Lifelines.jsx'
 import Voting from './Voting.jsx'
 import Winnings from './Winnings.jsx'
 import data from './data.js'
+const url = 'http://localhost:3000'
+const atob = require('atob')
 
 export default class Game extends React.Component {
   constructor(props) {
@@ -18,12 +20,12 @@ export default class Game extends React.Component {
       correctAnswer: '',
       allAnswers: [],
       loading: true,
-      name: '',
+      name: document.getElementById('app').getAttribute('data-user'),
       gameScore: {name: '', score: 0},
       canAnswer: [false, false, false, false],
       canType: true,
       dChanceActiv: false,
-      text: 'Who wants to be a millionaire?',
+      text: 'Who wants to be a doctor?',
       scores: 0,
       secsLeft: 30,
       maxSecRound: 30,
@@ -56,7 +58,12 @@ export default class Game extends React.Component {
   }
 
   insertQuestion = data => {
-    const incorrectAnswer = data.results[0].incorrect_answers;
+    console.log('data',data)
+    const incorrect_answers = []
+    incorrect_answers.push(data.incorrect_answer1)
+    incorrect_answers.push(data.incorrect_answer2)
+    incorrect_answers.push(data.incorrect_answer3)
+    console.log('incorrect',incorrect_answers)
     const correctAnswer = this.htmlDecode(data.results[0].correct_answer);
     const allAnswers = this.shuffle(incorrectAnswer.concat(correctAnswer));
     const idxCorrAns = allAnswers.indexOf(correctAnswer);
@@ -71,17 +78,13 @@ export default class Game extends React.Component {
   }
 
   getQuestion = () => {
-
-    const baseUrl = `https://opentdb.com/api.php?amount=1&difficulty=${data.difficulty[this.state.scores]}&type=multiple`;
-    fetch(baseUrl)
-      .then( data => {
-        if(data.ok){
-            return data.json();
-        }else{
-            throw new Error('Error getting data');
-        }
-    }).then(data => {
-        this.insertQuestion(data)
+    const competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1))
+    const baseUrl = `${url}/competitions/${1}/competition_questions/0`;
+    fetch(baseUrl,{
+      mode: 'no-cors',
+    })
+    .then( data => data.json()).then(data => {
+      this.insertQuestion(JSON.parse(atob(data)))
     })
     .catch(error => {
       console.log(error);
@@ -449,7 +452,7 @@ export default class Game extends React.Component {
       <div className='panel'>
         <form className='form'>
           <label>
-            <input type='text' placeholder='Enter your name...' onChange = {this.handleNameChange} disabled = {!this.state.canType} required></input>
+            <input type='text' value={this.state.name} placeholder='Enter your name...' onChange = {this.handleNameChange} disabled = {!this.state.canType} required></input>
           </label>
           <input className='panelButton' onClick = {this.startGame} disabled = {!this.state.canClickControl[0]} type='submit' value='START NEW GAME'/>
         </form>

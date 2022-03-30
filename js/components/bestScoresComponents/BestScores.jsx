@@ -12,13 +12,13 @@ export default class BestScores extends React.Component {
 
 
   componentDidMount(){
-    const rankRef = firebase.database().ref('rank');
-      rankRef.on('value', snapshot => {
-        this.setState({
-          ranking: snapshot.val(),
-        })
-      });
-    console.log(typeof this.state.ranking);
+    const fetchScore = () => {
+      this.setState({
+        ranking: 'usman'
+      })
+    }
+    fetchScore();
+    console.log('ranking',this.state.ranking);
   }
 
 
