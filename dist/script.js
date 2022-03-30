@@ -27865,12 +27865,10 @@ var Game = function (_React$Component) {
     };
 
     _this.insertQuestion = function (data) {
-      console.log('data', data);
       var incorrect_answers = [];
       incorrect_answers.push(data.incorrect_answer1);
       incorrect_answers.push(data.incorrect_answer2);
       incorrect_answers.push(data.incorrect_answer3);
-      console.log('question', data.question);
       var correctAnswer = _this.htmlDecode(data.correct_answer);
       var allAnswers = _this.shuffle(incorrect_answers.concat(correctAnswer));
       var idxCorrAns = allAnswers.indexOf(correctAnswer);
@@ -27892,7 +27890,8 @@ var Game = function (_React$Component) {
       }).then(function (data) {
         return data.json();
       }).then(function (data) {
-        _this.insertQuestion(JSON.parse(atob(data)));
+        console.log('data', data);
+        _this.insertQuestion(JSON.parse(atob(data.question)));
       }).catch(function (error) {
         console.log(error);
       });
@@ -28085,17 +28084,22 @@ var Game = function (_React$Component) {
     _this.updateRanking = function (resigned) {
       var timeOver = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
+      var competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1));
       if (resigned && _this.state.currentWinnings > 0 || !resigned && _this.state.guaranteedWinnings > 0 && !timeOver) {
-        var rankRef = firebase.database().ref('rank');
-        var newRankRef = rankRef.push();
+        var formData = new FormData();
         var time = (_this.state.scores + 1) * 30 - _this.state.secsLeft;
-        newRankRef.set({
-          name: _this.state.name,
-          score: !resigned ? _this.state.guaranteedWinnings : _this.state.currentWinnings,
-          totalTime: _this.state.lifelinesStatus[0] === true ? time : time + 30,
-          lifelinesUsed: _this.state.lifelinesStatus.filter(function (el) {
-            return el === false;
-          }).length
+        formData.append('competition_result[name]', _this.state.name);
+        formData.append('competition_result[score]', !resigned ? _this.state.guaranteedWinnings : _this.state.currentWinnings);
+        formData.append('competition_result[custom_fields]', "{chapter: 'San 787878'}");
+        formData.append('competition_result[total_time]', _this.state.lifelinesStatus[0] === true ? time : time + 30);
+        formData.append('lifelines_used', _this.state.lifelinesStatus.filter(function (el) {
+          return el === false;
+        }).length);
+        var baseUrl = url + '/competitions/' + competitionNumber + '/leaderboard';
+        fetch(baseUrl, {
+          mode: 'no-cors',
+          method: 'Post',
+          body: formData
         });
       }
     };
