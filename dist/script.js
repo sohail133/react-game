@@ -27832,7 +27832,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var url = 'http://localhost:3000';
+var url = "http://localhost:3000";
 var atob = __webpack_require__(257);
 
 var Game = function (_React$Component) {
@@ -27855,7 +27855,7 @@ var Game = function (_React$Component) {
     };
 
     _this.htmlDecode = function (input) {
-      var e = document.createElement('div');
+      var e = document.createElement("div");
       e.innerHTML = input;
       return e.childNodes[0].nodeValue;
     };
@@ -27883,18 +27883,20 @@ var Game = function (_React$Component) {
     };
 
     _this.getQuestion = function () {
-      var competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1));
-      var baseUrl = url + '/competitions/' + competitionNumber + '/competition_questions/' + _this.state.questionNumber;
-      fetch(baseUrl, {
-        mode: 'no-cors'
-      }).then(function (data) {
-        return data.json();
-      }).then(function (data) {
-        console.log('data', data);
-        _this.insertQuestion(JSON.parse(atob(data.question)));
-      }).catch(function (error) {
-        console.log(error);
-      });
+      var competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1));
+      _this.insertQuestion(JSON.parse(atob("eyJpZCI6MSwicXVlc3Rpb24iOiJ3aG8gaXMgdGhlIGZvdW5kZXIgb2YgcGFr\naXN0YW4/IiwiY29ycmVjdF9hbnN3ZXIiOiJRdWFpZC1lLUF6YW0iLCJpbmNv\ncnJlY3RfYW5zd2VyMSI6IkFsbGFtYSBJcWJhbCIsImluY29ycmVjdF9hbnN3\nZXIyIjoiU2hvdWthdCBBbGkiLCJpbmNvcnJlY3RfYW5zd2VyMyI6IkltcmFu\nIEtoYW4iLCJpbmNvcnJlY3RfYW5zd2VyNCI6bnVsbCwiZGlmZmljdWx0eSI6\nImVhc3kiLCJjb21wZXRpdGlvbl9pZCI6MSwiY3JlYXRlZF9hdCI6IjIwMjIt\nMDMtMjlUMDQ6MjE6NTguMzc4LTA3OjAwIiwidXBkYXRlZF9hdCI6IjIwMjIt\nMDMtMjlUMDQ6MjE6NTguMzc4LTA3OjAwIn0=\n")));
+      // const baseUrl = `${url}/competitions/${competitionNumber}/competition_questions/${this.state.questionNumber}`;
+      // fetch(baseUrl, {
+      //   mode: "no-cors",
+      // })
+      //   .then((data) => data.json())
+      //   .then((data) => {
+      //     console.log("data", data);
+      //     this.insertQuestion(JSON.parse(atob(data.question)));
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
     };
 
     _this.handleNameChange = function (event) {
@@ -27918,8 +27920,8 @@ var Game = function (_React$Component) {
     _this.finishGame = function (text) {
       clearInterval(_this.intervalId);
       _this.updateRanking(false, true);
-      _this.changeAudio('gameSounds', 'wrong_answer');
-      _this.changeAudio('mainTheme', 'main_theme');
+      _this.changeAudio("gameSounds", "wrong_answer");
+      _this.changeAudio("mainTheme", "main_theme");
       _this.setState({
         canUseLifelines: [false, false, false, false, false],
         canClickControl: [true, false, false],
@@ -27934,14 +27936,14 @@ var Game = function (_React$Component) {
       if (_this.state.name.length > 0) {
         //Clear inteval in case multiple click on Start Game button
         clearInterval(_this.intervalId);
-        _this.changeAudio('gameSounds', 'lets_play');
+        _this.changeAudio("gameSounds", "lets_play");
         _this.timeuot = setTimeout(function () {
-          return _this.changeAudio('mainTheme', 'easy');
+          return _this.changeAudio("mainTheme", "easy");
         }, 1000);
         _this.exitVotingResult();
         _this.prepareQuestion([true, true, true, true, true]);
         _this.setState({
-          text: 'Hello ' + _this.state.name + '! This is your first question:',
+          text: "Hello " + _this.state.name + "! This is your first question:",
           maxSecRound: 30,
           canType: false,
           scores: 0,
@@ -27962,18 +27964,18 @@ var Game = function (_React$Component) {
         });
       }
       if (_this.state.secsLeft === 0) {
-        _this.finishGame('Time is over!');
+        _this.finishGame("Time is over!");
       }
     };
 
     _this.nextRound = function () {
-      _this.changeAudio('gameSounds', 'next');
+      _this.changeAudio("gameSounds", "next");
       _this.timeuot = setTimeout(function () {
-        return _this.changeAudio('mainTheme', _data2.default.themeRound[_this.state.scores]);
+        return _this.changeAudio("mainTheme", _data2.default.themeRound[_this.state.scores]);
       }, 1000);
       _this.exitVotingResult();
       _this.prepareQuestion(_this.state.lifelinesStatus);
-      _this.setText('Great! This is your next question!');
+      _this.setText("Great! This is your next question!");
       _this.intervalId = setInterval(_this.timer.bind(), 1000);
       _this.setState({
         maxSecRound: _this.state.secsLeft + 30
@@ -27987,31 +27989,31 @@ var Game = function (_React$Component) {
     };
 
     _this.changeAudio = function (id, src) {
-      var audio = document.querySelector('#' + id);
+      var audio = document.querySelector("#" + id);
       audio.currentTime = 0;
-      audio.src = './sounds/' + src + '.mp3';
+      audio.src = "./sounds/" + src + ".mp3";
       audio.play();
     };
 
     _this.hightlightCorrectAns = function () {
-      _this.state.allAnsBtns[_this.state.idxCorrAns].classList.remove('selected');
-      _this.state.allAnsBtns[_this.state.idxCorrAns].classList.add('correct');
+      _this.state.allAnsBtns[_this.state.idxCorrAns].classList.remove("selected");
+      _this.state.allAnsBtns[_this.state.idxCorrAns].classList.add("correct");
     };
 
     _this.hightlightSelectedAns = function (idx) {
-      _this.state.allAnsBtns[idx].classList.add('selected');
+      _this.state.allAnsBtns[idx].classList.add("selected");
       _this.state.allAnsBtns[idx].disabled = true;
     };
 
     _this.hightlightWrongAns = function (idx) {
-      _this.state.allAnsBtns[idx].classList.remove('selected');
-      _this.state.allAnsBtns[idx].classList.add('wrong');
+      _this.state.allAnsBtns[idx].classList.remove("selected");
+      _this.state.allAnsBtns[idx].classList.add("wrong");
       _this.state.allAnsBtns[idx].disabled = true;
     };
 
     _this.handleAnsSelect = function (answer, i) {
-      _this.changeAudio('gameSounds', 'final_answer');
-      _this.state.allAnsBtns = document.querySelectorAll('.answerBtn');
+      _this.changeAudio("gameSounds", "final_answer");
+      _this.state.allAnsBtns = document.querySelectorAll(".answerBtn");
       _this.hightlightSelectedAns(i);
       _this.setState({
         isPause: true,
@@ -28024,7 +28026,7 @@ var Game = function (_React$Component) {
           _this.hightlightCorrectAns();
           _this.setState({
             isPause: false,
-            votingVis: 'hidden',
+            votingVis: "hidden",
             dChanceActiv: false,
             scores: _this.state.scores + 1,
             canAnswer: [false, false, false, false],
@@ -28035,15 +28037,15 @@ var Game = function (_React$Component) {
           });
 
           if (_this.state.scores < 15) {
-            _this.changeAudio('gameSounds', 'correct_answer');
-            _this.setText('Correct answer! Do you want to continue playing??');
+            _this.changeAudio("gameSounds", "correct_answer");
+            _this.setText("Correct answer! Do you want to continue playing??");
           } else {
             _this.setState({
               canClickControl: [true, false, false]
             });
             _this.updateRanking(false);
-            _this.changeAudio('mainTheme', 'winning_theme');
-            _this.changeAudio('gameSounds', 'you_won_million');
+            _this.changeAudio("mainTheme", "winning_theme");
+            _this.changeAudio("gameSounds", "you_won_million");
             _this.setText("Congratulations! You've just won a million dollars!");
           }
         } else {
@@ -28051,7 +28053,7 @@ var Game = function (_React$Component) {
             _this.hightlightCorrectAns();
             _this.hightlightWrongAns(i);
             _this.updateRanking(false);
-            _this.finishGame('Wrong answer!');
+            _this.finishGame("Wrong answer!");
           } else {
             _this.setText("Wrong answer! but you have another chance!");
             _this.setState({
@@ -28066,11 +28068,11 @@ var Game = function (_React$Component) {
     };
 
     _this.resign = function () {
-      _this.changeAudio('gameSounds', 'resign');
+      _this.changeAudio("gameSounds", "resign");
       _this.timeuot = setTimeout(function () {
-        return _this.changeAudio('mainTheme', 'main_theme');
+        return _this.changeAudio("mainTheme", "main_theme");
       }, 1000);
-      _this.setText('Congratulations! You won ' + _this.state.currentWinnings + ' pounds');
+      _this.setText("Congratulations! You won " + _this.state.currentWinnings + " pounds");
       _this.setState({
         canType: true,
         canClickControl: [true, false, false],
@@ -28084,21 +28086,21 @@ var Game = function (_React$Component) {
     _this.updateRanking = function (resigned) {
       var timeOver = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
-      var competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1));
+      var competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1));
       if (resigned && _this.state.currentWinnings > 0 || !resigned && _this.state.guaranteedWinnings > 0 && !timeOver) {
-        var formData = new FormData();
         var time = (_this.state.scores + 1) * 30 - _this.state.secsLeft;
-        formData.append('competition_result[name]', _this.state.name);
-        formData.append('competition_result[score]', !resigned ? _this.state.guaranteedWinnings : _this.state.currentWinnings);
-        formData.append('competition_result[custom_fields]', "{chapter: 'San 787878'}");
-        formData.append('competition_result[total_time]', _this.state.lifelinesStatus[0] === true ? time : time + 30);
-        formData.append('lifelines_used', _this.state.lifelinesStatus.filter(function (el) {
+        var formData = new FormData();
+        formData.append("competition_result[name]", _this.state.name);
+        formData.append("competition_result[score]", !resigned ? _this.state.guaranteedWinnings : _this.state.currentWinnings);
+        formData.append("competition_result[custom_fields]", "{chapter: 'San 787878'}");
+        formData.append("competition_result[total_time]", _this.state.lifelinesStatus[0] === true ? time : time + 30);
+        formData.append("lifelines_used", _this.state.lifelinesStatus.filter(function (el) {
           return el === false;
         }).length);
-        var baseUrl = url + '/competitions/' + competitionNumber + '/leaderboard';
+
+        var baseUrl = url + "/competitions/" + 2 + "/competition_results";
         fetch(baseUrl, {
-          mode: 'no-cors',
-          method: 'Post',
+          method: "Post",
           body: formData
         });
       }
@@ -28109,7 +28111,7 @@ var Game = function (_React$Component) {
       var lifelinesStatus = _this.state.lifelinesStatus;
       lifelinesStatus[0] = false;
       _this.state.canUseLifelines = [false, false, false, false, false];
-      _this.changeAudio('gameSounds', 'lifelines');
+      _this.changeAudio("gameSounds", "lifelines");
       _this.setState({
         secsLeft: _this.state.secsLeft + 30
       });
@@ -28120,13 +28122,13 @@ var Game = function (_React$Component) {
       var lifelinesStatus = _this.state.lifelinesStatus;
       lifelinesStatus[1] = false;
       _this.state.canUseLifelines = [false, false, false, false, false];
-      _this.changeAudio('gameSounds', 'lifelines');
-      _this.state.allAnsBtns = [].concat(_toConsumableArray(document.querySelectorAll('.answerBtn')));
+      _this.changeAudio("gameSounds", "lifelines");
+      _this.state.allAnsBtns = [].concat(_toConsumableArray(document.querySelectorAll(".answerBtn")));
       _this.state.allAnsBtns.splice(_this.state.idxCorrAns, 1);
       _this.shuffle(_this.state.allAnsBtns);
       for (var i = 0; i < 2; i++) {
         _this.state.allAnsBtns[i].disabled = true;
-        _this.state.allAnsBtns[i].classList.add('wrong');
+        _this.state.allAnsBtns[i].classList.add("wrong");
       }
     };
 
@@ -28135,7 +28137,7 @@ var Game = function (_React$Component) {
       var lifelinesStatus = _this.state.lifelinesStatus;
       lifelinesStatus[2] = false;
       _this.state.canUseLifelines = [false, false, false, false, false];
-      _this.changeAudio('gameSounds', 'lifelines');
+      _this.changeAudio("gameSounds", "lifelines");
       _this.getQuestion();
     };
 
@@ -28144,14 +28146,14 @@ var Game = function (_React$Component) {
       var lifelinesStatus = _this.state.lifelinesStatus;
       lifelinesStatus[3] = false;
       _this.state.canUseLifelines = [false, false, false, false, false];
-      _this.changeAudio('gameSounds', 'lifelines');
+      _this.changeAudio("gameSounds", "lifelines");
 
-      var votingReults = document.querySelector('.votingResults');
-      var votingResultAll = document.querySelectorAll('.votingResult');
+      var votingReults = document.querySelector(".votingResults");
+      var votingResultAll = document.querySelectorAll(".votingResult");
       votingResultAll.forEach(function (r) {
-        return r.style.visibility = 'visible';
+        return r.style.visibility = "visible";
       });
-      votingReults.style.visibility = 'visible';
+      votingReults.style.visibility = "visible";
       var max = 100;
       var r1 = _this.randombetween(1, max - 3);
       var r2 = _this.randombetween(1, max - 2 - r1);
@@ -28167,13 +28169,13 @@ var Game = function (_React$Component) {
         rndNums[_this.state.idxCorrAns] = tmp;
       }
 
-      var percentDiagrams = document.querySelectorAll('.percentageDiagram');
-      var percentages = document.querySelectorAll('.percentage');
+      var percentDiagrams = document.querySelectorAll(".percentageDiagram");
+      var percentages = document.querySelectorAll(".percentage");
 
-      percentDiagrams[0].style.height = rndNums[0] + 'px';
-      percentDiagrams[1].style.height = rndNums[1] + 'px';
-      percentDiagrams[2].style.height = rndNums[2] + 'px';
-      percentDiagrams[3].style.height = rndNums[3] + 'px';
+      percentDiagrams[0].style.height = rndNums[0] + "px";
+      percentDiagrams[1].style.height = rndNums[1] + "px";
+      percentDiagrams[2].style.height = rndNums[2] + "px";
+      percentDiagrams[3].style.height = rndNums[3] + "px";
 
       var counter0 = 0;
       var counter1 = 0;
@@ -28181,7 +28183,7 @@ var Game = function (_React$Component) {
       var counter3 = 0;
 
       _this.setTimer0 = setInterval(function () {
-        percentages[0].innerText = counter0 + '%';
+        percentages[0].innerText = counter0 + "%";
 
         if (counter0 === rndNums[0]) {
           clearInterval(_this.setTimer0);
@@ -28191,7 +28193,7 @@ var Game = function (_React$Component) {
       }, 2500 / rndNums[0]);
 
       _this.setTimer1 = setInterval(function () {
-        percentages[1].innerText = counter1 + '%';
+        percentages[1].innerText = counter1 + "%";
 
         if (counter1 === rndNums[1]) {
           clearInterval(_this.setTimer1);
@@ -28201,7 +28203,7 @@ var Game = function (_React$Component) {
       }, 2500 / rndNums[1]);
 
       _this.setTimer2 = setInterval(function () {
-        percentages[2].innerText = counter2 + '%';
+        percentages[2].innerText = counter2 + "%";
 
         if (counter2 === rndNums[2]) {
           clearInterval(_this.setTimer2);
@@ -28211,7 +28213,7 @@ var Game = function (_React$Component) {
       }, 2500 / rndNums[2]);
 
       _this.setTimer3 = setInterval(function () {
-        percentages[3].innerText = counter3 + '%';
+        percentages[3].innerText = counter3 + "%";
 
         if (counter3 === rndNums[3]) {
           clearInterval(_this.setTimer3);
@@ -28226,43 +28228,43 @@ var Game = function (_React$Component) {
       var lifelinesStatus = _this.state.lifelinesStatus;
       lifelinesStatus[4] = false;
       _this.state.canUseLifelines = [false, false, false, false, false];
-      _this.changeAudio('gameSounds', 'lifelines');
+      _this.changeAudio("gameSounds", "lifelines");
       _this.setState({
         dChanceActiv: true
       });
     };
 
     _this.exitVotingResult = function () {
-      var votingReults = document.querySelector('.votingResults');
-      var votingResultAll = document.querySelectorAll('.votingResult');
-      var percentages = document.querySelectorAll('.percentage');
-      var percentDiagrams = document.querySelectorAll('.percentageDiagram');
-      votingReults.style.visibility = 'hidden';
+      var votingReults = document.querySelector(".votingResults");
+      var votingResultAll = document.querySelectorAll(".votingResult");
+      var percentages = document.querySelectorAll(".percentage");
+      var percentDiagrams = document.querySelectorAll(".percentageDiagram");
+      votingReults.style.visibility = "hidden";
       votingResultAll.forEach(function (r) {
-        return r.style.visibility = 'hidden';
+        return r.style.visibility = "hidden";
       });
       percentages.forEach(function (p) {
-        return p.innerText = '0%';
+        return p.innerText = "0%";
       });
       percentDiagrams.forEach(function (d) {
-        return d.style.height = '0px';
+        return d.style.height = "0px";
       });
     };
 
     _this.state = {
-      question: '',
+      question: "",
       questionNumber: 0,
       allAnsBtns: [],
       idxCorrAns: null,
-      correctAnswer: '',
+      correctAnswer: "",
       allAnswers: [],
       loading: true,
-      name: document.getElementById('app').getAttribute('data-user'),
-      gameScore: { name: '', score: 0 },
+      name: document.getElementById("app").getAttribute("data-user"),
+      gameScore: { name: "", score: 0 },
       canAnswer: [false, false, false, false],
       canType: true,
       dChanceActiv: false,
-      text: 'Who wants to be a doctor?',
+      text: "Who wants to be a doctor?",
       scores: 0,
       secsLeft: 30,
       maxSecRound: 30,
@@ -28277,7 +28279,7 @@ var Game = function (_React$Component) {
   }
 
   _createClass(Game, [{
-    key: 'componentWillUnmount',
+    key: "componentWillUnmount",
     value: function componentWillUnmount() {
       clearInterval(this.intervalId);
     }
@@ -28285,34 +28287,54 @@ var Game = function (_React$Component) {
     //Lifelines
 
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
-      console.log('question', this.state.question);
       return _react2.default.createElement(
-        'div',
-        { className: 'container gameContainer' },
+        "div",
+        { className: "container gameContainer" },
         _react2.default.createElement(
-          'div',
-          { className: 'panel' },
+          "div",
+          { className: "panel" },
           _react2.default.createElement(
-            'form',
-            { className: 'form' },
+            "form",
+            { className: "form" },
             _react2.default.createElement(
-              'label',
+              "label",
               null,
-              _react2.default.createElement('input', { type: 'text', value: this.state.name, placeholder: 'Enter your name...', onChange: this.handleNameChange, disabled: !this.state.canType, required: true })
+              _react2.default.createElement("input", {
+                type: "text",
+                value: this.state.name,
+                placeholder: "Enter your name...",
+                onChange: this.handleNameChange,
+                disabled: !this.state.canType,
+                required: true
+              })
             ),
-            _react2.default.createElement('input', { className: 'panelButton', onClick: this.startGame, disabled: !this.state.canClickControl[0], type: 'submit', value: 'START NEW GAME' })
+            _react2.default.createElement("input", {
+              className: "panelButton",
+              onClick: this.startGame,
+              disabled: !this.state.canClickControl[0],
+              type: "submit",
+              value: "START NEW GAME"
+            })
           ),
           _react2.default.createElement(
-            'button',
-            { className: 'panelButton', onClick: this.nextRound, disabled: !this.state.canClickControl[1] },
-            'NEXT QUESTION'
+            "button",
+            {
+              className: "panelButton",
+              onClick: this.nextRound,
+              disabled: !this.state.canClickControl[1]
+            },
+            "NEXT QUESTION"
           ),
           _react2.default.createElement(
-            'button',
-            { className: 'panelButton', onClick: this.resign, disabled: !this.state.canClickControl[2] },
-            'RESIGN'
+            "button",
+            {
+              className: "panelButton",
+              onClick: this.resign,
+              disabled: !this.state.canClickControl[2]
+            },
+            "RESIGN"
           ),
           _react2.default.createElement(_Winnings2.default, {
             guaranteed: this.state.guaranteedWinnings,
@@ -28321,11 +28343,11 @@ var Game = function (_React$Component) {
           _react2.default.createElement(_Timer2.default, { time: this.state.secsLeft, maxTime: this.state.maxSecRound })
         ),
         _react2.default.createElement(
-          'div',
-          { className: 'game' },
+          "div",
+          { className: "game" },
           _react2.default.createElement(
-            'h1',
-            { className: 'text' },
+            "h1",
+            { className: "text" },
             this.state.text
           ),
           _react2.default.createElement(_Question2.default, { question: this.state.question }),
@@ -28346,8 +28368,8 @@ var Game = function (_React$Component) {
           _react2.default.createElement(_Voting2.default, null)
         ),
         _react2.default.createElement(
-          'div',
-          { className: 'winnings' },
+          "div",
+          { className: "winnings" },
           _react2.default.createElement(_CurrentScore2.default, { currentScore: this.state.scores })
         )
       );
