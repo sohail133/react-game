@@ -318,11 +318,11 @@ export default class Game extends React.Component {
         this.state.lifelinesStatus[0] === true ? time : time + 30
       );
       formData.append(
-        "lifelines_used",
+        "competition_result[lifelines_used]",
         this.state.lifelinesStatus.filter((el) => el === false).length
       );
 
-      const baseUrl = `${url}/competitions/${2}/competition_results`;
+      const baseUrl = `${url}/competitions/${competitionNumber}/competition_results`;
       fetch(baseUrl, {
         method: "Post",
         body: formData,

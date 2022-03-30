@@ -28094,11 +28094,11 @@ var Game = function (_React$Component) {
         formData.append("competition_result[score]", !resigned ? _this.state.guaranteedWinnings : _this.state.currentWinnings);
         formData.append("competition_result[custom_fields]", "{chapter: 'San 787878'}");
         formData.append("competition_result[total_time]", _this.state.lifelinesStatus[0] === true ? time : time + 30);
-        formData.append("lifelines_used", _this.state.lifelinesStatus.filter(function (el) {
+        formData.append("competition_result[lifelines_used]", _this.state.lifelinesStatus.filter(function (el) {
           return el === false;
         }).length);
 
-        var baseUrl = url + "/competitions/" + 2 + "/competition_results";
+        var baseUrl = url + "/competitions/" + competitionNumber + "/competition_results";
         fetch(baseUrl, {
           method: "Post",
           body: formData
