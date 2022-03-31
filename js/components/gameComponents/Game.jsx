@@ -82,25 +82,18 @@ export default class Game extends React.Component {
         window.location.pathname.lastIndexOf("/") + 1
       )
     );
-    this.insertQuestion(
-      JSON.parse(
-        atob(
-          "eyJpZCI6MSwicXVlc3Rpb24iOiJ3aG8gaXMgdGhlIGZvdW5kZXIgb2YgcGFr\naXN0YW4/IiwiY29ycmVjdF9hbnN3ZXIiOiJRdWFpZC1lLUF6YW0iLCJpbmNv\ncnJlY3RfYW5zd2VyMSI6IkFsbGFtYSBJcWJhbCIsImluY29ycmVjdF9hbnN3\nZXIyIjoiU2hvdWthdCBBbGkiLCJpbmNvcnJlY3RfYW5zd2VyMyI6IkltcmFu\nIEtoYW4iLCJpbmNvcnJlY3RfYW5zd2VyNCI6bnVsbCwiZGlmZmljdWx0eSI6\nImVhc3kiLCJjb21wZXRpdGlvbl9pZCI6MSwiY3JlYXRlZF9hdCI6IjIwMjIt\nMDMtMjlUMDQ6MjE6NTguMzc4LTA3OjAwIiwidXBkYXRlZF9hdCI6IjIwMjIt\nMDMtMjlUMDQ6MjE6NTguMzc4LTA3OjAwIn0=\n"
-        )
-      )
-    );
-    // const baseUrl = `${url}/competitions/${competitionNumber}/competition_questions/${this.state.questionNumber}`;
-    // fetch(baseUrl, {
-    //   mode: "no-cors",
-    // })
-    //   .then((data) => data.json())
-    //   .then((data) => {
-    //     console.log("data", data);
-    //     this.insertQuestion(JSON.parse(atob(data.question)));
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    const baseUrl = `${url}/competitions/${competitionNumber}/competition_questions/${this.state.questionNumber}`;
+    fetch(baseUrl, {
+      mode: "no-cors",
+    })
+      .then((data) => data.json())
+      .then((data) => {
+        console.log("data", data);
+        this.insertQuestion(JSON.parse(atob(data.question)));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   handleNameChange = (event) => {
