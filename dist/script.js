@@ -31134,8 +31134,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(4);
@@ -31149,6 +31147,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var url = "http://localhost:3000";
 
 var BestScores = function (_React$Component) {
   _inherits(BestScores, _React$Component);
@@ -31165,20 +31165,34 @@ var BestScores = function (_React$Component) {
   }
 
   _createClass(BestScores, [{
-    key: 'componentDidMount',
+    key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
 
-      var rankRef = firebase.database().ref('rank');
-      rankRef.on('value', function (snapshot) {
+      var competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1));
+      var baseUrl = url + "/competitions/" + competitionNumber + "/leaderboard";
+      fetch(baseUrl, {
+        mode: "no-cors",
+        headers: { Accept: "application/json" }
+      }).then(function (data) {
+        return data.json();
+      }).then(function (data) {
+        console.log("data", data);
         _this2.setState({
-          ranking: snapshot.val()
+          ranking: data
         });
+      }).catch(function (error) {
+        console.log(error);
       });
-      console.log(_typeof(this.state.ranking));
+      // rankRef.on("value", (snapshot) => {
+      //   this.setState({
+      //     ranking: snapshot.val(),
+      //   });
+      // });
+      // console.log(this.state.ranking);
     }
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
       var scores = [];
       var _iteratorNormalCompletion = true;
@@ -31210,89 +31224,89 @@ var BestScores = function (_React$Component) {
         return b.score === a.score ? a.totalTime - b.totalTime : b.score - a.score;
       }).map(function (el, index) {
         return _react2.default.createElement(
-          'tr',
+          "tr",
           { key: index },
           _react2.default.createElement(
-            'td',
+            "td",
             null,
             index + 1
           ),
           _react2.default.createElement(
-            'td',
+            "td",
             null,
             el.name
           ),
           _react2.default.createElement(
-            'td',
+            "td",
             null,
             el.score,
-            '\xA3 '
+            "\xA3 "
           ),
           _react2.default.createElement(
-            'td',
+            "td",
             null,
             el.totalTime,
-            'sec '
+            "sec "
           ),
           _react2.default.createElement(
-            'td',
+            "td",
             null,
             el.lifelinesUsed,
-            '/5'
+            "/5"
           )
         );
       });
 
       return _react2.default.createElement(
-        'div',
-        { className: 'container bestScoreContainer' },
+        "div",
+        { className: "container bestScoreContainer" },
         _react2.default.createElement(
-          'table',
-          { className: 'bestScoreTable' },
+          "table",
+          { className: "bestScoreTable" },
           _react2.default.createElement(
-            'thead',
+            "thead",
             null,
             _react2.default.createElement(
-              'tr',
+              "tr",
               null,
               _react2.default.createElement(
-                'td',
-                { colSpan: '5' },
-                'Best Scores'
+                "td",
+                { colSpan: "5" },
+                "Best Scores"
               )
             ),
             _react2.default.createElement(
-              'tr',
+              "tr",
               null,
               _react2.default.createElement(
-                'td',
+                "td",
                 null,
-                'Position'
+                "Position"
               ),
               _react2.default.createElement(
-                'td',
+                "td",
                 null,
-                'Name'
+                "Name"
               ),
               _react2.default.createElement(
-                'td',
+                "td",
                 null,
-                'Score'
+                "Score"
               ),
               _react2.default.createElement(
-                'td',
+                "td",
                 null,
-                'Total time'
+                "Total time"
               ),
               _react2.default.createElement(
-                'td',
+                "td",
                 null,
-                'Lifelines used'
+                "Lifelines used"
               )
             )
           ),
           _react2.default.createElement(
-            'tbody',
+            "tbody",
             null,
             ranking
           )
