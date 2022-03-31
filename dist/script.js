@@ -27890,7 +27890,6 @@ var Game = function (_React$Component) {
       }).then(function (data) {
         return data.json();
       }).then(function (data) {
-        console.log("data", data);
         _this.insertQuestion(JSON.parse(atob(data.question)));
       }).catch(function (error) {
         console.log(error);
@@ -31148,7 +31147,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var url = "http://localhost:3000";
+var url = window.location.origin;
 
 var BestScores = function (_React$Component) {
   _inherits(BestScores, _React$Component);
@@ -31177,7 +31176,6 @@ var BestScores = function (_React$Component) {
       }).then(function (data) {
         return data.json();
       }).then(function (data) {
-        console.log("data", data);
         _this2.setState({
           ranking: data
         });
@@ -31245,13 +31243,13 @@ var BestScores = function (_React$Component) {
           _react2.default.createElement(
             "td",
             null,
-            el.totalTime,
+            el.total_time,
             "sec "
           ),
           _react2.default.createElement(
             "td",
             null,
-            el.lifelinesUsed,
+            el.lifelines_used,
             "/5"
           )
         );

@@ -88,7 +88,6 @@ export default class Game extends React.Component {
     })
       .then((data) => data.json())
       .then((data) => {
-        console.log("data", data);
         this.insertQuestion(JSON.parse(atob(data.question)));
       })
       .catch((error) => {

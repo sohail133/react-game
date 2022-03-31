@@ -1,5 +1,5 @@
 import React from "react";
-const url = "http://localhost:3000";
+const url = window.location.origin;
 
 export default class BestScores extends React.Component {
   constructor(props) {
@@ -22,7 +22,6 @@ export default class BestScores extends React.Component {
     })
       .then((data) => data.json())
       .then((data) => {
-        console.log("data", data);
         this.setState({
           ranking: data,
         });
@@ -54,8 +53,8 @@ export default class BestScores extends React.Component {
             <td>{index + 1}</td>
             <td>{el.name}</td>
             <td>{el.score}&pound; </td>
-            <td>{el.totalTime}sec </td>
-            <td>{el.lifelinesUsed}/5</td>
+            <td>{el.total_time}sec </td>
+            <td>{el.lifelines_used}/5</td>
           </tr>
         );
       });
