@@ -7,7 +7,7 @@ import Lifelines from "./Lifelines.jsx";
 import Voting from "./Voting.jsx";
 import Winnings from "./Winnings.jsx";
 import data from "./data.js";
-const url = "http://localhost:3000";
+const url = window.location.origin;
 const atob = require("atob");
 
 export default class Game extends React.Component {
