@@ -23,11 +23,11 @@ export default class Game extends React.Component {
       loading: true,
       additionalFiled: "",
       name: document.getElementById("app").getAttribute("data-user-name"),
-      additionalFiledPlaceHolder: document
-        .getElementById("app")
-        .getAttribute("data-additional-field")
-        ? document.getElementById("app").getAttribute("data-additional-field")
-        : "",
+      additionalFiledPlaceHolder:
+        document.getElementById("app").getAttribute("data-additional-field") !==
+        null
+          ? document.getElementById("app").getAttribute("data-additional-field")
+          : "",
       gameScore: { name: "", score: 0 },
       canAnswer: [false, false, false, false],
       canType: true,
@@ -189,7 +189,6 @@ export default class Game extends React.Component {
     this.intervalId = setInterval(this.timer.bind(), 1000);
     this.setState({
       maxSecRound: this.state.secsLeft + 30,
-      allAnsBtns: [],
     });
   };
 
@@ -209,6 +208,7 @@ export default class Game extends React.Component {
   hightlightCorrectAns = () => {
     this.state.allAnsBtns[this.state.idxCorrAns].classList.remove("selected");
     this.state.allAnsBtns[this.state.idxCorrAns].classList.add("correct");
+    this.state.allAnsBtns[this.state.idxCorrAns].classList.remove("correct");
   };
 
   hightlightSelectedAns = (idx) => {
@@ -219,6 +219,7 @@ export default class Game extends React.Component {
   hightlightWrongAns = (idx) => {
     this.state.allAnsBtns[idx].classList.remove("selected");
     this.state.allAnsBtns[idx].classList.add("wrong");
+    this.state.allAnsBtns[idx].classList.remove("wrong");
     this.state.allAnsBtns[idx].disabled = true;
     window.location.replace(window.location.origin);
   };
@@ -475,7 +476,7 @@ export default class Game extends React.Component {
     return (
       <div className="container gameContainer">
         <div className="panel">
-          <form className="form">
+          <form className="form" style={{ width: "100%" }}>
             <label>
               <input
                 type="text"
@@ -486,7 +487,7 @@ export default class Game extends React.Component {
                 required
               ></input>
             </label>
-            {this.state.additionalFiledPlaceHolder === "" ? (
+            {this.state.additionalFiledPlaceHolder !== "" ? (
               ""
             ) : (
               <label>

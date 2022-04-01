@@ -27982,8 +27982,7 @@ var Game = function (_React$Component) {
       _this.setText("Great! This is your next question!");
       _this.intervalId = setInterval(_this.timer.bind(), 1000);
       _this.setState({
-        maxSecRound: _this.state.secsLeft + 30,
-        allAnsBtns: []
+        maxSecRound: _this.state.secsLeft + 30
       });
     };
 
@@ -28003,6 +28002,7 @@ var Game = function (_React$Component) {
     _this.hightlightCorrectAns = function () {
       _this.state.allAnsBtns[_this.state.idxCorrAns].classList.remove("selected");
       _this.state.allAnsBtns[_this.state.idxCorrAns].classList.add("correct");
+      _this.state.allAnsBtns[_this.state.idxCorrAns].classList.remove("correct");
     };
 
     _this.hightlightSelectedAns = function (idx) {
@@ -28013,6 +28013,7 @@ var Game = function (_React$Component) {
     _this.hightlightWrongAns = function (idx) {
       _this.state.allAnsBtns[idx].classList.remove("selected");
       _this.state.allAnsBtns[idx].classList.add("wrong");
+      _this.state.allAnsBtns[idx].classList.remove("wrong");
       _this.state.allAnsBtns[idx].disabled = true;
       window.location.replace(window.location.origin);
     };
@@ -28259,7 +28260,7 @@ var Game = function (_React$Component) {
       loading: true,
       additionalFiled: "",
       name: document.getElementById("app").getAttribute("data-user-name"),
-      additionalFiledPlaceHolder: document.getElementById("app").getAttribute("data-additional-field") ? document.getElementById("app").getAttribute("data-additional-field") : "",
+      additionalFiledPlaceHolder: document.getElementById("app").getAttribute("data-additional-field") !== null ? document.getElementById("app").getAttribute("data-additional-field") : "",
       gameScore: { name: "", score: 0 },
       canAnswer: [false, false, false, false],
       canType: true,
@@ -28297,7 +28298,7 @@ var Game = function (_React$Component) {
           { className: "panel" },
           _react2.default.createElement(
             "form",
-            { className: "form" },
+            { className: "form", style: { width: "100%" } },
             _react2.default.createElement(
               "label",
               null,
