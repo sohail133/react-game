@@ -487,7 +487,8 @@ export default class Game extends React.Component {
                 required
               ></input>
             </label>
-            {this.state.additionalFiledPlaceHolder !== "" ? (
+            {this.state.additionalFiledPlaceHolder === "" &&
+            this.state.additionalFiledPlaceHolder === " " ? (
               ""
             ) : (
               <label>

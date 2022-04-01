@@ -28311,7 +28311,7 @@ var Game = function (_React$Component) {
                 required: true
               })
             ),
-            this.state.additionalFiledPlaceHolder !== "" ? "" : _react2.default.createElement(
+            this.state.additionalFiledPlaceHolder === "" && this.state.additionalFiledPlaceHolder === " " ? "" : _react2.default.createElement(
               "label",
               null,
               _react2.default.createElement("input", {
