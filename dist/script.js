@@ -27902,6 +27902,12 @@ var Game = function (_React$Component) {
       });
     };
 
+    _this.handleFieldChange = function (event) {
+      _this.setState({
+        additionalFiled: event.target.value
+      });
+    };
+
     _this.prepareQuestion = function (status) {
       _this.getQuestion();
       _this.setState({
@@ -27909,7 +27915,7 @@ var Game = function (_React$Component) {
         questionNumber: _this.state.questionNumber + 1,
         lifelinesStatus: status,
         canAnswer: [true, true, true, true],
-        canClickControl: [true, false, false],
+        canClickControl: [false, false, false],
         secsLeft: 30 + _this.state.secsLeft
       });
     };
@@ -27920,8 +27926,8 @@ var Game = function (_React$Component) {
       _this.changeAudio("gameSounds", "wrong_answer");
       _this.changeAudio("mainTheme", "main_theme");
       _this.setState({
-        canUseLifelines: [false, false, false, false, false],
-        canClickControl: [true, false, false],
+        canUseLifelines: [false, false, false, false],
+        canClickControl: [false, false, false],
         canAnswer: [false, false, false, false],
         canType: true,
         text: text
@@ -27938,7 +27944,7 @@ var Game = function (_React$Component) {
           return _this.changeAudio("mainTheme", "easy");
         }, 1000);
         _this.exitVotingResult();
-        _this.prepareQuestion([true, true, true, true, true]);
+        _this.prepareQuestion([true, true, true, true]);
         _this.setState({
           text: "Hello " + _this.state.name + "! This is your first question:",
           maxSecRound: 30,
@@ -27947,7 +27953,7 @@ var Game = function (_React$Component) {
           currentWinnings: 0,
           guaranteedWinnings: 0,
           secsLeft: 30,
-          canUseLifelines: [true, true, true, true, true],
+          canUseLifelines: [true, true, true, true],
           isPause: false
         });
         _this.intervalId = setInterval(_this.timer.bind(), 1000);
@@ -27962,6 +27968,7 @@ var Game = function (_React$Component) {
       }
       if (_this.state.secsLeft === 0) {
         _this.finishGame("Time is over!");
+        window.location.replace(window.location.origin);
       }
     };
 
@@ -27975,7 +27982,8 @@ var Game = function (_React$Component) {
       _this.setText("Great! This is your next question!");
       _this.intervalId = setInterval(_this.timer.bind(), 1000);
       _this.setState({
-        maxSecRound: _this.state.secsLeft + 30
+        maxSecRound: _this.state.secsLeft + 30,
+        allAnsBtns: []
       });
     };
 
@@ -28006,6 +28014,7 @@ var Game = function (_React$Component) {
       _this.state.allAnsBtns[idx].classList.remove("selected");
       _this.state.allAnsBtns[idx].classList.add("wrong");
       _this.state.allAnsBtns[idx].disabled = true;
+      window.location.replace(window.location.origin);
     };
 
     _this.handleAnsSelect = function (answer, i) {
@@ -28015,7 +28024,7 @@ var Game = function (_React$Component) {
       _this.setState({
         isPause: true,
         canAnswer: [false, false, false, false],
-        canUseLifelines: [false, false, false, false, false]
+        canUseLifelines: [false, false, false, false]
       });
       _this.timeoutId = setTimeout(function () {
         if (i === _this.state.idxCorrAns) {
@@ -28027,8 +28036,8 @@ var Game = function (_React$Component) {
             dChanceActiv: false,
             scores: _this.state.scores + 1,
             canAnswer: [false, false, false, false],
-            canClickControl: [true, true, true],
-            canUseLifelines: [false, false, false, false, false],
+            canClickControl: [false, true, true],
+            canUseLifelines: [false, false, false, false],
             currentWinnings: _data2.default.currentWinnings[_this.state.scores],
             guaranteedWinnings: _data2.default.guaranteedWinnings[_this.state.scores]
           });
@@ -28038,7 +28047,7 @@ var Game = function (_React$Component) {
             _this.setText("Correct answer! Do you want to continue playing??");
           } else {
             _this.setState({
-              canClickControl: [true, false, false]
+              canClickControl: [false, false, false]
             });
             _this.updateRanking(false);
             _this.changeAudio("mainTheme", "winning_theme");
@@ -28072,8 +28081,8 @@ var Game = function (_React$Component) {
       _this.setText("Congratulations! You won " + _this.state.currentWinnings + " pounds");
       _this.setState({
         canType: true,
-        canClickControl: [true, false, false],
-        canUseLifelines: [false, false, false, false, false],
+        canClickControl: [false, false, false],
+        canUseLifelines: [false, false, false, false],
         canAnswer: [false, false, false]
       });
 
@@ -28100,6 +28109,7 @@ var Game = function (_React$Component) {
           method: "Post",
           body: formData
         });
+        window.location.replace(window.location.origin);
       }
     };
 
@@ -28107,7 +28117,7 @@ var Game = function (_React$Component) {
       _this.setText("You've got extra 30 second!");
       var lifelinesStatus = _this.state.lifelinesStatus;
       lifelinesStatus[0] = false;
-      _this.state.canUseLifelines = [false, false, false, false, false];
+      _this.state.canUseLifelines = [false, false, false, false];
       _this.changeAudio("gameSounds", "lifelines");
       _this.setState({
         secsLeft: _this.state.secsLeft + 30
@@ -28118,7 +28128,7 @@ var Game = function (_React$Component) {
       _this.setText("Let's highlight two wrong answers!");
       var lifelinesStatus = _this.state.lifelinesStatus;
       lifelinesStatus[1] = false;
-      _this.state.canUseLifelines = [false, false, false, false, false];
+      _this.state.canUseLifelines = [false, false, false, false];
       _this.changeAudio("gameSounds", "lifelines");
       _this.state.allAnsBtns = [].concat(_toConsumableArray(document.querySelectorAll(".answerBtn")));
       _this.state.allAnsBtns.splice(_this.state.idxCorrAns, 1);
@@ -28129,20 +28139,11 @@ var Game = function (_React$Component) {
       }
     };
 
-    _this.handleChangeQuestion = function () {
-      _this.setText("That was really hard question. Let's look at this:");
-      var lifelinesStatus = _this.state.lifelinesStatus;
-      lifelinesStatus[2] = false;
-      _this.state.canUseLifelines = [false, false, false, false, false];
-      _this.changeAudio("gameSounds", "lifelines");
-      _this.getQuestion();
-    };
-
     _this.handleVoting = function () {
       _this.setText("Let's give audience a chance!");
       var lifelinesStatus = _this.state.lifelinesStatus;
       lifelinesStatus[3] = false;
-      _this.state.canUseLifelines = [false, false, false, false, false];
+      _this.state.canUseLifelines = [false, false, false, false];
       _this.changeAudio("gameSounds", "lifelines");
 
       var votingReults = document.querySelector(".votingResults");
@@ -28224,7 +28225,7 @@ var Game = function (_React$Component) {
       _this.setText("Good choice! It makes things easier.");
       var lifelinesStatus = _this.state.lifelinesStatus;
       lifelinesStatus[4] = false;
-      _this.state.canUseLifelines = [false, false, false, false, false];
+      _this.state.canUseLifelines = [false, false, false, false];
       _this.changeAudio("gameSounds", "lifelines");
       _this.setState({
         dChanceActiv: true
@@ -28256,7 +28257,9 @@ var Game = function (_React$Component) {
       correctAnswer: "",
       allAnswers: [],
       loading: true,
-      name: document.getElementById("app").getAttribute("data-user"),
+      additionalFiled: "",
+      name: document.getElementById("app").getAttribute("data-user-name"),
+      additionalFiledPlaceHolder: document.getElementById("app").getAttribute("data-additional-field") ? document.getElementById("app").getAttribute("data-additional-field") : "",
       gameScore: { name: "", score: 0 },
       canAnswer: [false, false, false, false],
       canType: true,
@@ -28265,8 +28268,8 @@ var Game = function (_React$Component) {
       scores: 0,
       secsLeft: 30,
       maxSecRound: 30,
-      canUseLifelines: [false, false, false, false, false],
-      lifelinesStatus: [true, true, true, true, true],
+      canUseLifelines: [false, false, false, false],
+      lifelinesStatus: [true, true, true, true],
       canClickControl: [true, false, false],
       currentWinnings: 0,
       guaranteedWinnings: 0,
@@ -28303,14 +28306,24 @@ var Game = function (_React$Component) {
                 value: this.state.name,
                 placeholder: "Enter your name...",
                 onChange: this.handleNameChange,
-                disabled: !this.state.canType,
+                disabled: !this.state.canClickControl[0],
                 required: true
               })
             ),
-            _react2.default.createElement("input", {
+            this.state.additionalFiledPlaceHolder !== "" ? "" : _react2.default.createElement(
+              "label",
+              null,
+              _react2.default.createElement("input", {
+                type: "text",
+                value: this.state.additionalFiled,
+                placeholder: "Enter your " + this.state.additionalFiledPlaceHolder + "...",
+                onChange: this.handleFieldChange,
+                disabled: !this.state.canClickControl[0]
+              })
+            ),
+            !this.state.canClickControl[0] ? "" : _react2.default.createElement("input", {
               className: "panelButton",
               onClick: this.startGame,
-              disabled: !this.state.canClickControl[0],
               type: "submit",
               value: "START NEW GAME"
             })
@@ -28478,7 +28491,7 @@ var Answers = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Answers.__proto__ || Object.getPrototypeOf(Answers)).call(this, props));
 
     _this.onHandleClick = function (answer, i) {
-      if (typeof _this.props.onMyClick === 'function') {
+      if (typeof _this.props.onMyClick === "function") {
         _this.props.onMyClick(answer, i);
       }
     };
@@ -28488,13 +28501,13 @@ var Answers = function (_React$Component) {
     };
 
     _this.state = {
-      answers: ['A', 'B', 'C', 'D']
+      answers: ["A", "B", "C", "D"]
     };
     return _this;
   }
 
   _createClass(Answers, [{
-    key: 'componentWillReceiveProps',
+    key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
       if (nextProps.allAnswers !== this.props.allAnswers) {
         this.setState({
@@ -28503,24 +28516,26 @@ var Answers = function (_React$Component) {
       }
     }
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
       var _this2 = this;
 
-      var letters = ['A: ', 'B: ', 'C: ', 'D: '];
+      var letters = ["A: ", "B: ", "C: ", "D: "];
       var btns = this.state.answers.map(function (answer, i) {
-        return _react2.default.createElement('button', {
-          className: 'answerBtn',
+        return _react2.default.createElement("button", {
+          className: "answerBtn",
           key: answer,
           disabled: !_this2.props.canAnswer[i],
           onClick: function onClick(e) {
             return _this2.onHandleClick(answer, i);
-          }, dangerouslySetInnerHTML: _this2.createMarkup(letters[i], answer) });
+          },
+          dangerouslySetInnerHTML: _this2.createMarkup(letters[i], answer)
+        });
       });
 
       return _react2.default.createElement(
-        'div',
-        { className: 'asnwersContainer' },
+        "div",
+        { className: "asnwersContainer" },
         btns
       );
     }
@@ -28640,40 +28655,39 @@ var CurrentScore = function (_React$Component) {
     _this.state = {
       currentScore: _this.props.currentScore
     };
-
     return _this;
   }
 
   _createClass(CurrentScore, [{
-    key: 'componentWillReceiveProps',
+    key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
       if (nextProps.currentScore !== this.props.currentScore) {
         this.setState({
           currentScore: nextProps.currentScore
         });
       }
-      var hl = document.querySelector('.currentWinnings');
-      hl.style.transform = 'translate(0, ' + this.state.currentScore * -30 + 'px)';
+      var hl = document.querySelector(".currentWinnings");
+      hl.style.transform = "translate(0, " + this.state.currentScore * -30 + "px)";
     }
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
       var winningsLi = _data2.default.currentWinnings.slice(0).reverse().map(function (win) {
         return _react2.default.createElement(
-          'li',
+          "li",
           { key: win },
           win,
-          '\xA3'
+          " Points"
         );
       });
       return _react2.default.createElement(
-        'div',
-        { className: '' },
+        "div",
+        { className: "" },
         _react2.default.createElement(
-          'ul',
-          { className: 'currentScore' },
+          "ul",
+          { className: "currentScore" },
           winningsLi,
-          _react2.default.createElement('li', { className: 'currentWinnings' })
+          _react2.default.createElement("li", { className: "currentWinnings" })
         )
       );
     }
@@ -28692,7 +28706,7 @@ exports.default = CurrentScore;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -28710,95 +28724,105 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Lifelines = function (_React$Component) {
-    _inherits(Lifelines, _React$Component);
+  _inherits(Lifelines, _React$Component);
 
-    function Lifelines(props) {
-        _classCallCheck(this, Lifelines);
+  function Lifelines(props) {
+    _classCallCheck(this, Lifelines);
 
-        var _this = _possibleConstructorReturn(this, (Lifelines.__proto__ || Object.getPrototypeOf(Lifelines)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Lifelines.__proto__ || Object.getPrototypeOf(Lifelines)).call(this, props));
 
-        _this.onHandleClickExtraTime = function () {
-            if (typeof _this.props.onMyClickAddExtraTime === 'function') {
-                _this.props.onMyClickAddExtraTime();
-            }
-        };
+    _this.onHandleClickExtraTime = function () {
+      if (typeof _this.props.onMyClickAddExtraTime === "function") {
+        _this.props.onMyClickAddExtraTime();
+      }
+    };
 
-        _this.onHandleClickChangeQuestion = function () {
-            if (typeof _this.props.onMyClickChangeQuestion === 'function') {
-                _this.props.onMyClickChangeQuestion();
-            }
-        };
+    _this.onHandleClickChangeQuestion = function () {
+      if (typeof _this.props.onMyClickChangeQuestion === "function") {
+        _this.props.onMyClickChangeQuestion();
+      }
+    };
 
-        _this.onHandleClickFiftyFifty = function () {
-            if (typeof _this.props.onMyClickFiftyFifty === 'function') {
-                _this.props.onMyClickFiftyFifty();
-            }
-        };
+    _this.onHandleClickFiftyFifty = function () {
+      if (typeof _this.props.onMyClickFiftyFifty === "function") {
+        _this.props.onMyClickFiftyFifty();
+      }
+    };
 
-        _this.onHandleClickVoting = function () {
-            if (typeof _this.props.onMyClickVoting === 'function') {
-                _this.props.onMyClickVoting();
-            }
-        };
+    _this.onHandleClickVoting = function () {
+      if (typeof _this.props.onMyClickVoting === "function") {
+        _this.props.onMyClickVoting();
+      }
+    };
 
-        _this.onHandleDoubleChance = function () {
-            if (typeof _this.props.onMyClickDoubleChance === 'function') {
-                _this.props.onMyClickDoubleChance();
-            }
-        };
+    _this.onHandleDoubleChance = function () {
+      if (typeof _this.props.onMyClickDoubleChance === "function") {
+        _this.props.onMyClickDoubleChance();
+      }
+    };
 
-        _this.state = {
-            canUseLifelines: _this.props.canUseLifelines
-        };
+    _this.state = {
+      canUseLifelines: _this.props.canUseLifelines
+    };
+    return _this;
+  }
 
-        return _this;
+  _createClass(Lifelines, [{
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+      if (nextProps.canUseLifelines !== this.props.canUseLifelines) {
+        this.setState({
+          canUseLifelines: nextProps.canUseLifelines
+        });
+      }
     }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "div",
+        { className: "lifelinesContainer" },
+        _react2.default.createElement(
+          "button",
+          {
+            className: "lifelinesButton",
+            disabled: !this.state.canUseLifelines[0],
+            onClick: this.onHandleClickExtraTime
+          },
+          "Extra Time"
+        ),
+        _react2.default.createElement(
+          "button",
+          {
+            className: "lifelinesButton",
+            disabled: !this.state.canUseLifelines[1],
+            onClick: this.onHandleClickFiftyFifty
+          },
+          "50/50"
+        ),
+        _react2.default.createElement(
+          "button",
+          {
+            className: "lifelinesButton",
+            disabled: !this.state.canUseLifelines[3],
+            onClick: this.onHandleClickVoting
+          },
+          "Audience Voting"
+        ),
+        _react2.default.createElement(
+          "button",
+          {
+            className: "lifelinesButton",
+            disabled: !this.state.canUseLifelines[4],
+            onClick: this.onHandleDoubleChance
+          },
+          "Double Chance"
+        )
+      );
+    }
+  }]);
 
-    _createClass(Lifelines, [{
-        key: 'componentWillReceiveProps',
-        value: function componentWillReceiveProps(nextProps) {
-            if (nextProps.canUseLifelines !== this.props.canUseLifelines) {
-                this.setState({
-                    canUseLifelines: nextProps.canUseLifelines
-                });
-            }
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            return _react2.default.createElement(
-                'div',
-                { className: 'lifelinesContainer' },
-                _react2.default.createElement(
-                    'button',
-                    { className: 'lifelinesButton', disabled: !this.state.canUseLifelines[0], onClick: this.onHandleClickExtraTime },
-                    'Extra Time'
-                ),
-                _react2.default.createElement(
-                    'button',
-                    { className: 'lifelinesButton', disabled: !this.state.canUseLifelines[1], onClick: this.onHandleClickFiftyFifty },
-                    '50/50'
-                ),
-                _react2.default.createElement(
-                    'button',
-                    { className: 'lifelinesButton', disabled: !this.state.canUseLifelines[2], onClick: this.onHandleClickChangeQuestion },
-                    'Change Question'
-                ),
-                _react2.default.createElement(
-                    'button',
-                    { className: 'lifelinesButton', disabled: !this.state.canUseLifelines[3], onClick: this.onHandleClickVoting },
-                    'Audience Voting'
-                ),
-                _react2.default.createElement(
-                    'button',
-                    { className: 'lifelinesButton', disabled: !this.state.canUseLifelines[4], onClick: this.onHandleDoubleChance },
-                    'Double Chance'
-                )
-            );
-        }
-    }]);
-
-    return Lifelines;
+  return Lifelines;
 }(_react2.default.Component);
 
 exports.default = Lifelines;
@@ -28932,24 +28956,24 @@ var Winnings = function (_React$Component) {
   }
 
   _createClass(Winnings, [{
-    key: 'render',
+    key: "render",
     value: function render() {
       return _react2.default.createElement(
-        'div',
-        { className: 'winningsContainer' },
+        "div",
+        { className: "winningsContainer" },
         _react2.default.createElement(
-          'p',
-          { className: 'winning' },
-          'Current winnings: ',
+          "p",
+          { className: "winning" },
+          "Current winnings: ",
           this.props.current,
-          '\xA3 '
+          " Points"
         ),
         _react2.default.createElement(
-          'p',
-          { className: 'winning' },
-          'Guaranteed winnings: ',
+          "p",
+          { className: "winning" },
+          "Guaranteed winnings: ",
           this.props.guaranteed,
-          '\xA3 '
+          " Points"
         )
       );
     }
@@ -31238,7 +31262,7 @@ var BestScores = function (_React$Component) {
             "td",
             null,
             el.score,
-            "\xA3 "
+            " Points"
           ),
           _react2.default.createElement(
             "td",

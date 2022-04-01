@@ -52,7 +52,7 @@ export default class BestScores extends React.Component {
           <tr key={index}>
             <td>{index + 1}</td>
             <td>{el.name}</td>
-            <td>{el.score}&pound; </td>
+            <td>{el.score} Points</td>
             <td>{el.total_time}sec </td>
             <td>{el.lifelines_used}/5</td>
           </tr>

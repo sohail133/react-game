@@ -21,7 +21,13 @@ export default class Game extends React.Component {
       correctAnswer: "",
       allAnswers: [],
       loading: true,
-      name: document.getElementById("app").getAttribute("data-user"),
+      additionalFiled: "",
+      name: document.getElementById("app").getAttribute("data-user-name"),
+      additionalFiledPlaceHolder: document
+        .getElementById("app")
+        .getAttribute("data-additional-field")
+        ? document.getElementById("app").getAttribute("data-additional-field")
+        : "",
       gameScore: { name: "", score: 0 },
       canAnswer: [false, false, false, false],
       canType: true,
@@ -30,8 +36,8 @@ export default class Game extends React.Component {
       scores: 0,
       secsLeft: 30,
       maxSecRound: 30,
-      canUseLifelines: [false, false, false, false, false],
-      lifelinesStatus: [true, true, true, true, true],
+      canUseLifelines: [false, false, false, false],
+      lifelinesStatus: [true, true, true, true],
       canClickControl: [true, false, false],
       currentWinnings: 0,
       guaranteedWinnings: 0,
@@ -100,6 +106,11 @@ export default class Game extends React.Component {
       name: event.target.value,
     });
   };
+  handleFieldChange = (event) => {
+    this.setState({
+      additionalFiled: event.target.value,
+    });
+  };
 
   prepareQuestion = (status) => {
     this.getQuestion();
@@ -108,7 +119,7 @@ export default class Game extends React.Component {
       questionNumber: this.state.questionNumber + 1,
       lifelinesStatus: status,
       canAnswer: [true, true, true, true],
-      canClickControl: [true, false, false],
+      canClickControl: [false, false, false],
       secsLeft: 30 + this.state.secsLeft,
     });
   };
@@ -119,8 +130,8 @@ export default class Game extends React.Component {
     this.changeAudio("gameSounds", "wrong_answer");
     this.changeAudio("mainTheme", "main_theme");
     this.setState({
-      canUseLifelines: [false, false, false, false, false],
-      canClickControl: [true, false, false],
+      canUseLifelines: [false, false, false, false],
+      canClickControl: [false, false, false],
       canAnswer: [false, false, false, false],
       canType: true,
       text: text,
@@ -138,7 +149,7 @@ export default class Game extends React.Component {
         1000
       );
       this.exitVotingResult();
-      this.prepareQuestion([true, true, true, true, true]);
+      this.prepareQuestion([true, true, true, true]);
       this.setState({
         text: `Hello ${this.state.name}! This is your first question:`,
         maxSecRound: 30,
@@ -147,7 +158,7 @@ export default class Game extends React.Component {
         currentWinnings: 0,
         guaranteedWinnings: 0,
         secsLeft: 30,
-        canUseLifelines: [true, true, true, true, true],
+        canUseLifelines: [true, true, true, true],
         isPause: false,
       });
       this.intervalId = setInterval(this.timer.bind(), 1000);
@@ -162,6 +173,7 @@ export default class Game extends React.Component {
     }
     if (this.state.secsLeft === 0) {
       this.finishGame("Time is over!");
+      window.location.replace(window.location.origin);
     }
   };
 
@@ -177,6 +189,7 @@ export default class Game extends React.Component {
     this.intervalId = setInterval(this.timer.bind(), 1000);
     this.setState({
       maxSecRound: this.state.secsLeft + 30,
+      allAnsBtns: [],
     });
   };
 
@@ -207,6 +220,7 @@ export default class Game extends React.Component {
     this.state.allAnsBtns[idx].classList.remove("selected");
     this.state.allAnsBtns[idx].classList.add("wrong");
     this.state.allAnsBtns[idx].disabled = true;
+    window.location.replace(window.location.origin);
   };
 
   handleAnsSelect = (answer, i) => {
@@ -216,7 +230,7 @@ export default class Game extends React.Component {
     this.setState({
       isPause: true,
       canAnswer: [false, false, false, false],
-      canUseLifelines: [false, false, false, false, false],
+      canUseLifelines: [false, false, false, false],
     });
     this.timeoutId = setTimeout(() => {
       if (i === this.state.idxCorrAns) {
@@ -228,8 +242,8 @@ export default class Game extends React.Component {
           dChanceActiv: false,
           scores: this.state.scores + 1,
           canAnswer: [false, false, false, false],
-          canClickControl: [true, true, true],
-          canUseLifelines: [false, false, false, false, false],
+          canClickControl: [false, true, true],
+          canUseLifelines: [false, false, false, false],
           currentWinnings: data.currentWinnings[this.state.scores],
           guaranteedWinnings: data.guaranteedWinnings[this.state.scores],
         });
@@ -239,7 +253,7 @@ export default class Game extends React.Component {
           this.setText("Correct answer! Do you want to continue playing??");
         } else {
           this.setState({
-            canClickControl: [true, false, false],
+            canClickControl: [false, false, false],
           });
           this.updateRanking(false);
           this.changeAudio("mainTheme", "winning_theme");
@@ -276,8 +290,8 @@ export default class Game extends React.Component {
     );
     this.setState({
       canType: true,
-      canClickControl: [true, false, false],
-      canUseLifelines: [false, false, false, false, false],
+      canClickControl: [false, false, false],
+      canUseLifelines: [false, false, false, false],
       canAnswer: [false, false, false],
     });
 
@@ -319,6 +333,7 @@ export default class Game extends React.Component {
         method: "Post",
         body: formData,
       });
+      window.location.replace(window.location.origin);
     }
   };
 
@@ -332,7 +347,7 @@ export default class Game extends React.Component {
     this.setText("You've got extra 30 second!");
     const lifelinesStatus = this.state.lifelinesStatus;
     lifelinesStatus[0] = false;
-    this.state.canUseLifelines = [false, false, false, false, false];
+    this.state.canUseLifelines = [false, false, false, false];
     this.changeAudio("gameSounds", "lifelines");
     this.setState({
       secsLeft: this.state.secsLeft + 30,
@@ -343,7 +358,7 @@ export default class Game extends React.Component {
     this.setText("Let's highlight two wrong answers!");
     const lifelinesStatus = this.state.lifelinesStatus;
     lifelinesStatus[1] = false;
-    this.state.canUseLifelines = [false, false, false, false, false];
+    this.state.canUseLifelines = [false, false, false, false];
     this.changeAudio("gameSounds", "lifelines");
     this.state.allAnsBtns = [...document.querySelectorAll(".answerBtn")];
     this.state.allAnsBtns.splice(this.state.idxCorrAns, 1);
@@ -354,20 +369,11 @@ export default class Game extends React.Component {
     }
   };
 
-  handleChangeQuestion = () => {
-    this.setText("That was really hard question. Let's look at this:");
-    const lifelinesStatus = this.state.lifelinesStatus;
-    lifelinesStatus[2] = false;
-    this.state.canUseLifelines = [false, false, false, false, false];
-    this.changeAudio("gameSounds", "lifelines");
-    this.getQuestion();
-  };
-
   handleVoting = () => {
     this.setText("Let's give audience a chance!");
     const lifelinesStatus = this.state.lifelinesStatus;
     lifelinesStatus[3] = false;
-    this.state.canUseLifelines = [false, false, false, false, false];
+    this.state.canUseLifelines = [false, false, false, false];
     this.changeAudio("gameSounds", "lifelines");
 
     const votingReults = document.querySelector(".votingResults");
@@ -447,7 +453,7 @@ export default class Game extends React.Component {
     this.setText("Good choice! It makes things easier.");
     const lifelinesStatus = this.state.lifelinesStatus;
     lifelinesStatus[4] = false;
-    this.state.canUseLifelines = [false, false, false, false, false];
+    this.state.canUseLifelines = [false, false, false, false];
     this.changeAudio("gameSounds", "lifelines");
     this.setState({
       dChanceActiv: true,
@@ -476,17 +482,33 @@ export default class Game extends React.Component {
                 value={this.state.name}
                 placeholder="Enter your name..."
                 onChange={this.handleNameChange}
-                disabled={!this.state.canType}
+                disabled={!this.state.canClickControl[0]}
                 required
               ></input>
             </label>
-            <input
-              className="panelButton"
-              onClick={this.startGame}
-              disabled={!this.state.canClickControl[0]}
-              type="submit"
-              value="START NEW GAME"
-            />
+            {this.state.additionalFiledPlaceHolder !== "" ? (
+              ""
+            ) : (
+              <label>
+                <input
+                  type="text"
+                  value={this.state.additionalFiled}
+                  placeholder={`Enter your ${this.state.additionalFiledPlaceHolder}...`}
+                  onChange={this.handleFieldChange}
+                  disabled={!this.state.canClickControl[0]}
+                ></input>
+              </label>
+            )}
+            {!this.state.canClickControl[0] ? (
+              ""
+            ) : (
+              <input
+                className="panelButton"
+                onClick={this.startGame}
+                type="submit"
+                value="START NEW GAME"
+              />
+            )}
           </form>
           <button
             className="panelButton"
