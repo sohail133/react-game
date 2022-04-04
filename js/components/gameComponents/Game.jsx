@@ -21,9 +21,9 @@ export default class Game extends React.Component {
       correctAnswer: "",
       allAnswers: [],
       loading: true,
-      additionalFiled: "",
+      additionalField: "",
       name: document.getElementById("app").getAttribute("data-user-name"),
-      additionalFiledPlaceHolder:
+      additionalFieldPlaceHolder:
         document.getElementById("app").getAttribute("data-additional-field") !==
         null
           ? document.getElementById("app").getAttribute("data-additional-field")
@@ -108,7 +108,7 @@ export default class Game extends React.Component {
   };
   handleFieldChange = (event) => {
     this.setState({
-      additionalFiled: event.target.value,
+      additionalField: event.target.value,
     });
   };
 
@@ -322,8 +322,8 @@ export default class Game extends React.Component {
         !resigned ? this.state.guaranteedWinnings : this.state.currentWinnings
       );
       formData.append(
-        "competition_result[additional_filed]",
-        this.state.additionalFiled
+        "competition_result[additional_field]",
+        this.state.additionalField
       );
       formData.append(
         "competition_result[total_time]",
@@ -491,15 +491,15 @@ export default class Game extends React.Component {
                 required
               ></input>
             </label>
-            {this.state.additionalFiledPlaceHolder === "" &&
-            this.state.additionalFiledPlaceHolder === "" ? (
+            {this.state.additionalFieldPlaceHolder === "" &&
+            this.state.additionalFieldPlaceHolder === "" ? (
               ""
             ) : (
               <label>
                 <input
                   type="text"
-                  value={this.state.additionalFiled}
-                  placeholder={`Enter your ${this.state.additionalFiledPlaceHolder}...`}
+                  value={this.state.additionalField}
+                  placeholder={`Enter your ${this.state.additionalFieldPlaceHolder}...`}
                   onChange={this.handleFieldChange}
                   disabled={!this.state.canClickControl[0]}
                 ></input>

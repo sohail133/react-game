@@ -27328,7 +27328,7 @@ var Game = function (_React$Component) {
 
     _this.handleFieldChange = function (event) {
       _this.setState({
-        additionalFiled: event.target.value
+        additionalField: event.target.value
       });
     };
 
@@ -27528,7 +27528,7 @@ var Game = function (_React$Component) {
         var formData = new FormData();
         formData.append("competition_result[name]", _this.state.name);
         formData.append("competition_result[score]", !resigned ? _this.state.guaranteedWinnings : _this.state.currentWinnings);
-        formData.append("competition_result[additional_filed]", _this.state.additionalFiled);
+        formData.append("competition_result[additional_field]", _this.state.additionalField);
         formData.append("competition_result[total_time]", _this.state.lifelinesStatus[0] === true ? time : time + 30);
         formData.append("competition_result[lifelines_used]", _this.state.lifelinesStatus.filter(function (el) {
           return el === false;
@@ -27692,9 +27692,9 @@ var Game = function (_React$Component) {
       correctAnswer: "",
       allAnswers: [],
       loading: true,
-      additionalFiled: "",
+      additionalField: "",
       name: document.getElementById("app").getAttribute("data-user-name"),
-      additionalFiledPlaceHolder: document.getElementById("app").getAttribute("data-additional-field") !== null ? document.getElementById("app").getAttribute("data-additional-field") : "",
+      additionalFieldPlaceHolder: document.getElementById("app").getAttribute("data-additional-field") !== null ? document.getElementById("app").getAttribute("data-additional-field") : "",
       gameScore: { name: "", score: 0 },
       canAnswer: [false, false, false, false],
       canType: true,
@@ -27745,13 +27745,13 @@ var Game = function (_React$Component) {
                 required: true
               })
             ),
-            this.state.additionalFiledPlaceHolder === "" && this.state.additionalFiledPlaceHolder === "" ? "" : _react2.default.createElement(
+            this.state.additionalFieldPlaceHolder === "" && this.state.additionalFieldPlaceHolder === "" ? "" : _react2.default.createElement(
               "label",
               null,
               _react2.default.createElement("input", {
                 type: "text",
-                value: this.state.additionalFiled,
-                placeholder: "Enter your " + this.state.additionalFiledPlaceHolder + "...",
+                value: this.state.additionalField,
+                placeholder: "Enter your " + this.state.additionalFieldPlaceHolder + "...",
                 onChange: this.handleFieldChange,
                 disabled: !this.state.canClickControl[0]
               })
