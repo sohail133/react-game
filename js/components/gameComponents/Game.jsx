@@ -113,7 +113,6 @@ export default class Game extends React.Component {
   };
 
   prepareQuestion = (status) => {
-    this.removeHiglightAnswer()
     this.getQuestion();
     this.setState({
       canUseLifelines: status,
@@ -185,6 +184,7 @@ export default class Game extends React.Component {
       () => this.changeAudio("mainTheme", data.themeRound[this.state.scores]),
       1000
     );
+    this.removeHiglightAnswer()
     this.exitVotingResult();
     this.prepareQuestion(this.state.lifelinesStatus);
     this.setText("Great! This is your next question!");
@@ -338,8 +338,7 @@ export default class Game extends React.Component {
       fetch(baseUrl, {
         method: "Post",
         body: formData,
-      });
-      window.location.replace(window.location.origin);
+      }).then(res => res.json()).then(r => window.location.replace(window.location.origin)).catch(err => console.log(err))
     }
   };
 

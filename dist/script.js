@@ -27333,7 +27333,6 @@ var Game = function (_React$Component) {
     };
 
     _this.prepareQuestion = function (status) {
-      _this.removeHiglightAnswer();
       _this.getQuestion();
       _this.setState({
         canUseLifelines: status,
@@ -27403,6 +27402,7 @@ var Game = function (_React$Component) {
       _this.timeuot = setTimeout(function () {
         return _this.changeAudio("mainTheme", _data2.default.themeRound[_this.state.scores]);
       }, 1000);
+      _this.removeHiglightAnswer();
       _this.exitVotingResult();
       _this.prepareQuestion(_this.state.lifelinesStatus);
       _this.setText("Great! This is your next question!");
@@ -27538,8 +27538,13 @@ var Game = function (_React$Component) {
         fetch(baseUrl, {
           method: "Post",
           body: formData
+        }).then(function (res) {
+          return res.json();
+        }).then(function (r) {
+          return window.location.replace(window.location.origin);
+        }).catch(function (err) {
+          return console.log(err);
         });
-        window.location.replace(window.location.origin);
       }
     };
 
