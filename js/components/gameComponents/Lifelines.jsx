@@ -14,12 +14,6 @@ export default class Lifelines extends React.Component {
     }
   };
 
-  onHandleClickChangeQuestion = () => {
-    if (typeof this.props.onMyClickChangeQuestion === "function") {
-      this.props.onMyClickChangeQuestion();
-    }
-  };
-
   onHandleClickFiftyFifty = () => {
     if (typeof this.props.onMyClickFiftyFifty === "function") {
       this.props.onMyClickFiftyFifty();
@@ -65,14 +59,14 @@ export default class Lifelines extends React.Component {
         </button>
         <button
           className="lifelinesButton"
-          disabled={!this.state.canUseLifelines[3]}
+          disabled={!this.state.canUseLifelines[2]}
           onClick={this.onHandleClickVoting}
         >
           Audience Voting
         </button>
         <button
           className="lifelinesButton"
-          disabled={!this.state.canUseLifelines[4]}
+          disabled={!this.state.canUseLifelines[3]}
           onClick={this.onHandleDoubleChance}
         >
           Double Chance

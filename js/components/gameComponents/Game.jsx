@@ -113,6 +113,7 @@ export default class Game extends React.Component {
   };
 
   prepareQuestion = (status) => {
+    this.removeHiglightAnswer()
     this.getQuestion();
     this.setState({
       canUseLifelines: status,
@@ -141,6 +142,7 @@ export default class Game extends React.Component {
   startGame = (event) => {
     event.preventDefault();
     if (this.state.name.length > 0) {
+      
       //Clear inteval in case multiple click on Start Game button
       clearInterval(this.intervalId);
       this.changeAudio("gameSounds", "lets_play");
@@ -205,10 +207,13 @@ export default class Game extends React.Component {
     audio.play();
   };
 
+  removeHiglightAnswer = () => {
+    this.state.allAnsBtns[this.state.idxCorrAns].classList.remove("correct");
+  }
+
   hightlightCorrectAns = () => {
     this.state.allAnsBtns[this.state.idxCorrAns].classList.remove("selected");
     this.state.allAnsBtns[this.state.idxCorrAns].classList.add("correct");
-    this.state.allAnsBtns[this.state.idxCorrAns].classList.remove("correct");
   };
 
   hightlightSelectedAns = (idx) => {
@@ -219,8 +224,8 @@ export default class Game extends React.Component {
   hightlightWrongAns = (idx) => {
     this.state.allAnsBtns[idx].classList.remove("selected");
     this.state.allAnsBtns[idx].classList.add("wrong");
-    this.state.allAnsBtns[idx].classList.remove("wrong");
     this.state.allAnsBtns[idx].disabled = true;
+    this.updateRanking(false);
     window.location.replace(window.location.origin);
   };
 
@@ -259,7 +264,7 @@ export default class Game extends React.Component {
           this.updateRanking(false);
           this.changeAudio("mainTheme", "winning_theme");
           this.changeAudio("gameSounds", "you_won_million");
-          this.setText("Congratulations! You've just won a million dollars!");
+          this.setText("Congratulations! You've just won!");
         }
       } else {
         if (this.state.dChanceActiv === false) {
@@ -287,7 +292,7 @@ export default class Game extends React.Component {
       1000
     );
     this.setText(
-      `Congratulations! You won ${this.state.currentWinnings} pounds`
+      `Congratulations! You won ${this.state.currentWinnings} points`
     );
     this.setState({
       canType: true,
@@ -307,7 +312,7 @@ export default class Game extends React.Component {
     );
     if (
       (resigned && this.state.currentWinnings > 0) ||
-      (!resigned && this.state.guaranteedWinnings > 0 && !timeOver)
+      (!resigned && !timeOver)
     ) {
       const time = (this.state.scores + 1) * 30 - this.state.secsLeft;
       const formData = new FormData();
@@ -317,8 +322,8 @@ export default class Game extends React.Component {
         !resigned ? this.state.guaranteedWinnings : this.state.currentWinnings
       );
       formData.append(
-        "competition_result[custom_fields]",
-        "{chapter: 'San 787878'}"
+        "competition_result[additional_filed]",
+        this.state.additionalFiled
       );
       formData.append(
         "competition_result[total_time]",
@@ -488,7 +493,7 @@ export default class Game extends React.Component {
               ></input>
             </label>
             {this.state.additionalFiledPlaceHolder === "" &&
-            this.state.additionalFiledPlaceHolder === " " ? (
+            this.state.additionalFiledPlaceHolder === "" ? (
               ""
             ) : (
               <label>

@@ -23,7 +23,7 @@ export default class CurrentScore extends React.Component {
     const winningsLi = data.currentWinnings
       .slice(0)
       .reverse()
-      .map((win) => <li key={win}>{win} Points</li>);
+      .map((win) => <li key={win}>{win}</li>);
     return (
       <div className="">
         <ul className="currentScore">

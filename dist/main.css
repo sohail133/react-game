@@ -34,14 +34,19 @@ body {
     line-height: 1.5em; }
 
 .menuContainer {
+  display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -ms-flex-direction: column;
-      flex-direction: column;
-  -ms-flex-align: center;
-      align-items: center;
-  -ms-flex-pack: center;
-      justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   height: 90vh; }
   .menuContainer .menuButton {
     background-color: rgba(0, 0, 0, 0.6);
@@ -56,24 +61,32 @@ body {
       background-color: rgba(0, 0, 0, 0.8); }
 
 .gameContainer {
+  display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -ms-flex-pack: justify;
-      justify-content: space-between;
-  -ms-flex-direction: row;
-      flex-direction: row; }
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row; }
   .gameContainer .panel {
     width: 18%;
     color: lightblue;
     background-color: rgba(0, 0, 0, 0.6);
     padding: 1em;
     border: 1px solid black;
+    display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -ms-flex-align: center;
-        align-items: center;
-    -ms-flex-direction: column;
-        flex-direction: column; }
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column; }
     .gameContainer .panel input {
       width: 100%;
       padding: 0.5em;
@@ -81,6 +94,8 @@ body {
       color: skyblue;
       border: 1px solid black;
       background-color: rgba(0, 0, 0, 0.4); }
+      .gameContainer .panel input::-webkit-input-placeholder {
+        color: #b3e0f2; }
       .gameContainer .panel input:-ms-input-placeholder {
         color: #b3e0f2; }
       .gameContainer .panel input::placeholder {
@@ -111,12 +126,15 @@ body {
       border-radius: 50%;
       width: 50px;
       height: 50px;
+      display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
-      -ms-flex-pack: center;
-          justify-content: center;
-      -ms-flex-align: center;
-          align-items: center;
+      -webkit-box-pack: center;
+          -ms-flex-pack: center;
+              justify-content: center;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
       border: 2px solid green;
       box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.8); }
   .gameContainer .game {
@@ -130,12 +148,16 @@ body {
     font-size: 1.5em; }
   .gameContainer .lifelinesContainer {
     margin: 3em 0;
+    display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -ms-flex-pack: justify;
-        justify-content: space-between;
-    -ms-flex-flow: row wrap;
-        flex-flow: row wrap; }
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: row wrap;
+            flex-flow: row wrap; }
     .gameContainer .lifelinesContainer .lifelinesButton {
       min-width: 100px;
       padding: 10px;
@@ -162,10 +184,12 @@ body {
   border: 1px solid black; }
 
 .asnwersContainer {
+  display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -ms-flex-pack: justify;
-      justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   width: 100%; }
@@ -212,10 +236,12 @@ body {
     cursor: pointer; }
 
 .bestScoreContainer {
+  display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -ms-flex-pack: center;
-      justify-content: center; }
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
 
 .bestScoreTable {
   width: 80%;
@@ -255,10 +281,13 @@ body {
   visibility: hidden;
   width: 100%;
   height: 150px;
+  display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -ms-flex-direction: row;
-      flex-direction: row;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
   -ms-flex-pack: distribute;
       justify-content: space-around;
   margin: 3em 0;
@@ -267,14 +296,19 @@ body {
   border: 1px solid black; }
   .votingResults .votingResult {
     width: 100%;
+    display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -ms-flex-pack: end;
-        justify-content: flex-end;
-    -ms-flex-direction: column;
-        flex-direction: column;
-    -ms-flex-align: center;
-        align-items: center; }
+    -webkit-box-pack: end;
+        -ms-flex-pack: end;
+            justify-content: flex-end;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center; }
     .votingResults .votingResult .letter {
       margin: 0.5em 0; }
     .votingResults .votingResult .percentageDiagram {
