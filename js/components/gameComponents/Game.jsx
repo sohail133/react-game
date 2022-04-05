@@ -88,17 +88,18 @@ export default class Game extends React.Component {
         window.location.pathname.lastIndexOf("/") + 1
       )
     );
-    const baseUrl = `${url}/competitions/${competitionNumber}/competition_questions/${this.state.questionNumber}`;
-    fetch(baseUrl, {
-      mode: "no-cors",
-    })
-      .then((data) => data.json())
-      .then((data) => {
-        this.insertQuestion(JSON.parse(atob(data.question)));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    this.insertQuestion(JSON.parse(atob('eyJpZCI6MSwicXVlc3Rpb24iOiJXaG8gaXMgdGhlIGZvdW5kZXIgb2YgcGFr\naXN0YW4iLCJjb3JyZWN0X2Fuc3dlciI6IlF1YWlkLWUtQXphbSIsImluY29y\ncmVjdF9hbnN3ZXIxIjoiTmF3YXogU2hhcmlmIiwiaW5jb3JyZWN0X2Fuc3dl\ncjIiOiJJbXJhbiBLaGFuIiwiaW5jb3JyZWN0X2Fuc3dlcjMiOiJaYXJkYXJp\nIiwiaW5jb3JyZWN0X2Fuc3dlcjQiOm51bGwsImRpZmZpY3VsdHkiOiJlYXN5\nIiwiY29tcGV0aXRpb25faWQiOjQsImNyZWF0ZWRfYXQiOiIyMDIyLTA0LTA0\nVDAxOjIyOjQ0LjkyNy0wNzowMCIsInVwZGF0ZWRfYXQiOiIyMDIyLTA0LTA0\nVDAxOjIyOjQ0LjkyNy0wNzowMCJ9\n')));
+    // const baseUrl = `${url}/competitions/${competitionNumber}/competition_questions/${this.state.questionNumber}`;
+    // fetch(baseUrl, {
+    //   mode: "no-cors",
+    // })
+    //   .then((data) => data.json())
+    //   .then((data) => {
+    //     this.insertQuestion(JSON.parse(atob(data.question)));
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
 
   handleNameChange = (event) => {
@@ -174,7 +175,6 @@ export default class Game extends React.Component {
     }
     if (this.state.secsLeft === 0) {
       this.finishGame("Time is over!");
-      window.location.replace(window.location.origin);
     }
   };
 
@@ -208,6 +208,9 @@ export default class Game extends React.Component {
   };
 
   removeHiglightAnswer = () => {
+    for (let i = 0; i < 4; i++) {
+      this.state.allAnsBtns[i].classList.remove("wrong");
+    }
     this.state.allAnsBtns[this.state.idxCorrAns].classList.remove("correct");
   }
 
@@ -225,8 +228,6 @@ export default class Game extends React.Component {
     this.state.allAnsBtns[idx].classList.remove("selected");
     this.state.allAnsBtns[idx].classList.add("wrong");
     this.state.allAnsBtns[idx].disabled = true;
-    this.updateRanking(false);
-    window.location.replace(window.location.origin);
   };
 
   handleAnsSelect = (answer, i) => {
@@ -312,7 +313,7 @@ export default class Game extends React.Component {
     );
     if (
       (resigned && this.state.currentWinnings > 0) ||
-      (!resigned && !timeOver)
+      (!resigned && this.state.guaranteedWinnings > 0 && !timeOver || !resigned && timeOver)
     ) {
       const time = (this.state.scores + 1) * 30 - this.state.secsLeft;
       const formData = new FormData();
@@ -336,9 +337,10 @@ export default class Game extends React.Component {
 
       const baseUrl = `${url}/competitions/${competitionNumber}/competition_results`;
       fetch(baseUrl, {
-        method: "Post",
+        method: "POST",
         body: formData,
-      }).then(res => res.json()).then(r => window.location.replace(window.location.origin)).catch(err => console.log(err))
+      }).then(res => res.json()).then(r => r).catch(err => console.log(err))
+      window.location.replace(window.location.origin)
     }
   };
 

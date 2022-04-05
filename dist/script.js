@@ -27308,16 +27308,18 @@ var Game = function (_React$Component) {
 
     _this.getQuestion = function () {
       var competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1));
-      var baseUrl = url + "/competitions/" + competitionNumber + "/competition_questions/" + _this.state.questionNumber;
-      fetch(baseUrl, {
-        mode: "no-cors"
-      }).then(function (data) {
-        return data.json();
-      }).then(function (data) {
-        _this.insertQuestion(JSON.parse(atob(data.question)));
-      }).catch(function (error) {
-        console.log(error);
-      });
+      _this.insertQuestion(JSON.parse(atob('eyJpZCI6MSwicXVlc3Rpb24iOiJXaG8gaXMgdGhlIGZvdW5kZXIgb2YgcGFr\naXN0YW4iLCJjb3JyZWN0X2Fuc3dlciI6IlF1YWlkLWUtQXphbSIsImluY29y\ncmVjdF9hbnN3ZXIxIjoiTmF3YXogU2hhcmlmIiwiaW5jb3JyZWN0X2Fuc3dl\ncjIiOiJJbXJhbiBLaGFuIiwiaW5jb3JyZWN0X2Fuc3dlcjMiOiJaYXJkYXJp\nIiwiaW5jb3JyZWN0X2Fuc3dlcjQiOm51bGwsImRpZmZpY3VsdHkiOiJlYXN5\nIiwiY29tcGV0aXRpb25faWQiOjQsImNyZWF0ZWRfYXQiOiIyMDIyLTA0LTA0\nVDAxOjIyOjQ0LjkyNy0wNzowMCIsInVwZGF0ZWRfYXQiOiIyMDIyLTA0LTA0\nVDAxOjIyOjQ0LjkyNy0wNzowMCJ9\n')));
+      // const baseUrl = `${url}/competitions/${competitionNumber}/competition_questions/${this.state.questionNumber}`;
+      // fetch(baseUrl, {
+      //   mode: "no-cors",
+      // })
+      //   .then((data) => data.json())
+      //   .then((data) => {
+      //     this.insertQuestion(JSON.parse(atob(data.question)));
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
     };
 
     _this.handleNameChange = function (event) {
@@ -27393,7 +27395,6 @@ var Game = function (_React$Component) {
       }
       if (_this.state.secsLeft === 0) {
         _this.finishGame("Time is over!");
-        window.location.replace(window.location.origin);
       }
     };
 
@@ -27426,6 +27427,9 @@ var Game = function (_React$Component) {
     };
 
     _this.removeHiglightAnswer = function () {
+      for (var i = 0; i < 4; i++) {
+        _this.state.allAnsBtns[i].classList.remove("wrong");
+      }
       _this.state.allAnsBtns[_this.state.idxCorrAns].classList.remove("correct");
     };
 
@@ -27443,8 +27447,6 @@ var Game = function (_React$Component) {
       _this.state.allAnsBtns[idx].classList.remove("selected");
       _this.state.allAnsBtns[idx].classList.add("wrong");
       _this.state.allAnsBtns[idx].disabled = true;
-      _this.updateRanking(false);
-      window.location.replace(window.location.origin);
     };
 
     _this.handleAnsSelect = function (answer, i) {
@@ -27523,7 +27525,7 @@ var Game = function (_React$Component) {
       var timeOver = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
       var competitionNumber = parseInt(window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1));
-      if (resigned && _this.state.currentWinnings > 0 || !resigned && !timeOver) {
+      if (resigned && _this.state.currentWinnings > 0 || !resigned && _this.state.guaranteedWinnings > 0 && !timeOver || !resigned && timeOver) {
         var time = (_this.state.scores + 1) * 30 - _this.state.secsLeft;
         var formData = new FormData();
         formData.append("competition_result[name]", _this.state.name);
@@ -27536,15 +27538,16 @@ var Game = function (_React$Component) {
 
         var baseUrl = url + "/competitions/" + competitionNumber + "/competition_results";
         fetch(baseUrl, {
-          method: "Post",
+          method: "POST",
           body: formData
         }).then(function (res) {
           return res.json();
         }).then(function (r) {
-          return window.location.replace(window.location.origin);
+          return r;
         }).catch(function (err) {
           return console.log(err);
         });
+        window.location.replace(window.location.origin);
       }
     };
 
