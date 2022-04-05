@@ -88,18 +88,18 @@ export default class Game extends React.Component {
         window.location.pathname.lastIndexOf("/") + 1
       )
     );
-    this.insertQuestion(JSON.parse(atob('eyJpZCI6MSwicXVlc3Rpb24iOiJXaG8gaXMgdGhlIGZvdW5kZXIgb2YgcGFr\naXN0YW4iLCJjb3JyZWN0X2Fuc3dlciI6IlF1YWlkLWUtQXphbSIsImluY29y\ncmVjdF9hbnN3ZXIxIjoiTmF3YXogU2hhcmlmIiwiaW5jb3JyZWN0X2Fuc3dl\ncjIiOiJJbXJhbiBLaGFuIiwiaW5jb3JyZWN0X2Fuc3dlcjMiOiJaYXJkYXJp\nIiwiaW5jb3JyZWN0X2Fuc3dlcjQiOm51bGwsImRpZmZpY3VsdHkiOiJlYXN5\nIiwiY29tcGV0aXRpb25faWQiOjQsImNyZWF0ZWRfYXQiOiIyMDIyLTA0LTA0\nVDAxOjIyOjQ0LjkyNy0wNzowMCIsInVwZGF0ZWRfYXQiOiIyMDIyLTA0LTA0\nVDAxOjIyOjQ0LjkyNy0wNzowMCJ9\n')));
-    // const baseUrl = `${url}/competitions/${competitionNumber}/competition_questions/${this.state.questionNumber}`;
-    // fetch(baseUrl, {
-    //   mode: "no-cors",
-    // })
-    //   .then((data) => data.json())
-    //   .then((data) => {
-    //     this.insertQuestion(JSON.parse(atob(data.question)));
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    // this.insertQuestion(JSON.parse(atob('eyJpZCI6MSwicXVlc3Rpb24iOiJXaG8gaXMgdGhlIGZvdW5kZXIgb2YgcGFr\naXN0YW4iLCJjb3JyZWN0X2Fuc3dlciI6IlF1YWlkLWUtQXphbSIsImluY29y\ncmVjdF9hbnN3ZXIxIjoiTmF3YXogU2hhcmlmIiwiaW5jb3JyZWN0X2Fuc3dl\ncjIiOiJJbXJhbiBLaGFuIiwiaW5jb3JyZWN0X2Fuc3dlcjMiOiJaYXJkYXJp\nIiwiaW5jb3JyZWN0X2Fuc3dlcjQiOm51bGwsImRpZmZpY3VsdHkiOiJlYXN5\nIiwiY29tcGV0aXRpb25faWQiOjQsImNyZWF0ZWRfYXQiOiIyMDIyLTA0LTA0\nVDAxOjIyOjQ0LjkyNy0wNzowMCIsInVwZGF0ZWRfYXQiOiIyMDIyLTA0LTA0\nVDAxOjIyOjQ0LjkyNy0wNzowMCJ9\n')));
+    const baseUrl = `${url}/competitions/${competitionNumber}/competition_questions/${this.state.questionNumber}`;
+    fetch(baseUrl, {
+      mode: "no-cors",
+    })
+      .then((data) => data.json())
+      .then((data) => {
+        this.insertQuestion(JSON.parse(atob(data.question)));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   handleNameChange = (event) => {
