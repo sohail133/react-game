@@ -203,7 +203,7 @@ export default class Game extends React.Component {
   changeAudio = (id, src) => {
     const audio = document.querySelector(`#${id}`);
     audio.currentTime = 0;
-    audio.src = `public/packs/media/sounds/${src}.mp3`;
+    audio.src = `/public/packs/media/sounds/${src}.mp3`;
     audio.play();
   };
 
