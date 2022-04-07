@@ -27421,7 +27421,7 @@ var Game = function (_React$Component) {
     _this.changeAudio = function (id, src) {
       var audio = document.querySelector("#" + id);
       audio.currentTime = 0;
-      audio.src = "/public/packs/media/sounds/" + src + ".mp3";
+      audio.src = "/public/public/packs/media/sounds/" + src + ".mp3";
       audio.play();
     };
 
@@ -30791,8 +30791,8 @@ var Main = function (_React$Component) {
         { className: 'container' },
         _react2.default.createElement(_Header2.default, null),
         this.props.children,
-        _react2.default.createElement('audio', { id: 'gameSounds', src: '/public/packs/media/sounds/lets_play.mp3' }),
-        _react2.default.createElement('audio', { id: 'mainTheme', src: '/public/packs/media/sounds/main_theme.mp3', loop: true, autoPlay: true })
+        _react2.default.createElement('audio', { id: 'gameSounds', src: '/public/public/packs/media/sounds/lets_play.mp3' }),
+        _react2.default.createElement('audio', { id: 'mainTheme', src: '/public/public/packs/media/sounds/main_theme.mp3', loop: true, autoPlay: true })
       );
     }
   }]);

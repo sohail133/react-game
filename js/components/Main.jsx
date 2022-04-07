@@ -14,8 +14,8 @@ export default class Main extends React.Component {
     return <div className = 'container'>
       <Header/>
       { this.props.children }
-      <audio id='gameSounds' src="/public/packs/media/sounds/lets_play.mp3"></audio>
-      <audio id='mainTheme' src="/public/packs/media/sounds/main_theme.mp3" loop autoPlay></audio>
+      <audio id='gameSounds' src="/public/public/packs/media/sounds/lets_play.mp3"></audio>
+      <audio id='mainTheme' src="/public/public/packs/media/sounds/main_theme.mp3" loop autoPlay></audio>
     </div>
   }
 }
