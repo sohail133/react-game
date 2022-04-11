@@ -339,8 +339,7 @@ export default class Game extends React.Component {
       fetch(baseUrl, {
         method: "POST",
         body: formData,
-      }).then(res => res.json()).then(r => r).catch(err => console.log(err))
-      window.location.replace(window.location.origin)
+      }).then(res => res.json()).then(r => window.location.replace(window.location.origin)).catch(err => console.log(err))
     }
   };
 

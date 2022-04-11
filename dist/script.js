@@ -27542,11 +27542,10 @@ var Game = function (_React$Component) {
         }).then(function (res) {
           return res.json();
         }).then(function (r) {
-          return r;
+          return window.location.replace(window.location.origin);
         }).catch(function (err) {
           return console.log(err);
         });
-        window.location.replace(window.location.origin);
       }
     };
 

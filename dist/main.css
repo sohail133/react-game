@@ -330,7 +330,8 @@ body {
     box-sizing: content-box;
     height: 20px;
     padding: 5px 0;
-    text-align: center; }
+    text-align: center;
+    list-style-type: none; }
     .currentScore li:nth-child(1) {
       color: rgba(251, 158, 0, 0.9); }
     .currentScore li:nth-child(6) {
